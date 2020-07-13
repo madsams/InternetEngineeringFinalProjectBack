@@ -30,7 +30,6 @@ app.use(function(req, res, next) {
     next();
 });
 
-// app.use("/api/form" , forms_api);
 
 app.use(function(req, res) {
 	    log('error' , `url: ${req.url} not found.`);

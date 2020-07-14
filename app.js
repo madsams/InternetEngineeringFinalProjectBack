@@ -40,9 +40,9 @@ app.use(function(req, res) {
 	    return res.status(404).json({message: `url: ${req.url} Not found.`});
 });
 
-const mongoDBuri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS}@cluster0.rbxbu.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const connectionString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS}@cluster0.rbxbu.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 mongoose
-  .connect(mongoDBuri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     app.listen(port , function(){
         log('info',`app started at port ${port}`);

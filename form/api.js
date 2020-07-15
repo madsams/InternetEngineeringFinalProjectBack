@@ -10,7 +10,7 @@ const errorFormatter = ({ location, msg, param}) => {
 
 router.use(function(req, res, next) {
     log('info' , `new ${req.method} request on ${req.originalUrl}`);
-    if(req.method.toString() !== "POST" && req.method.toString() !== "GET" && req.method.toString()!=='PUT'){     
+    if(req.method.toString() !== "POST" && req.method.toString() !== "GET"){     
         log('error' , `${req.method} is not correct for ${req.originalUrl}`);
         return res.status(400).json({message: "Bad Request (request method error)"});
     }
@@ -28,7 +28,7 @@ router.get('/' , (req , res)=>{
     });
 });
 
-router.put('/' , (req , res)=> {
+router.post('/' , (req , res)=> {
     const form = req.body;
     service.createForm(form) .then(result => {
         log('info', JSON.stringify(result.toJSON()));

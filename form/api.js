@@ -1,5 +1,5 @@
 const express = require('express');
-const log = require('../logger/logger');
+const log = require('./../logger/logger');
 const service = require('./service');
 const {check, validationResult} = require('express-validator');
 

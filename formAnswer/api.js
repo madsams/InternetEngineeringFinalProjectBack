@@ -1,5 +1,5 @@
 const express = require('express');
-const log = require('../logger/logger');
+const log = require('./../logger/logger');
 const service = require('./service');
 const {check, validationResult} = require('express-validator');
 
@@ -18,13 +18,11 @@ router.use(function(req, res, next) {
 });
 
 router.get('/' , (req , res)=>{
-    service.findAllAnswer().then(result=>{
-        return res.status(200).json(result.map(answer => {
-                return answer.toJSON();
-        }));
-    }).catch(err=>{
-        log('error' , err);
-        return res.status(500).json({message: "Internal Server Error"});
+    service.findAllAnswers().then(result=>{
+        return res.status(200).json(result);
+    })
+    .catch(err =>{
+        return res.status(400).json(err);
     });
 });
 
@@ -33,46 +31,33 @@ router.post('/:id' , (req , res)=> {
     const id = req.params.id;
     answer['formId'] = id;
     const resultPromise = service.createFormAnswer(answer);
-    if (resultPromise){
-        resultPromise.then(result => {
-            log('info', JSON.stringify(result.toJSON()));
-            return res.status(200).json(result.toJSON());
-        })
-        .catch(err => {
-            log('error' , err);
-            return res.status(400).json({message: "Bad Request (request method error)"});
-        });
-    }else{
-        return res.status(400).json({message: "Bad Request (request method error)"});
-    }
+    resultPromise.then(result => {
+        console.log('here');
+        return res.status(200).json(result);
+    })
+    .catch(err => {
+        return res.status(400).json(err);
+    });
 });
 
 router.get('/:id' , (req , res) => {
     const id = req.params.id;
-    service.findAnswer(id).then(answer=>{
-        if (answer){
-            log('info', `find answer with id= ${id}`);
-            console.log(answer.toJSON());
-            return res.status(200).json(answer.toJSON());
-        }
-        log('error', `not find answer with id= ${id}`);
-        return res.status(400).json({message: "Bad Request (not found)"});
-    }).catch(err=>{
-        log('error' , err);
-        return res.status(400).json({message: "Bad Request (not found)"});
+    service.findAnswer(id)
+    .then(answer=>{
+        return res.status(200).json(answer);
+    })
+    .catch(err=>{
+        return res.status(400).json(err);
     })
 });
 
 router.get('/form/:id' , (req , res)=> {
     const id = req.params.id;
-    service.findFormAnswer(id).then(result => {
-        return res.status(200).json(result.map(answer => {
-            return answer.toJSON();
-        }));
+    service.findFormAnswers(id).then(result => {
+        return res.status(200).json(result);
     })
     .catch(err=>{
-        log('error' , err);
-        return res.status(400).json({message: "Bad Request (not found)"});
+        return res.status(400).json(err);
     });
 });
 

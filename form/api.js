@@ -10,7 +10,7 @@ const errorFormatter = ({ location, msg, param}) => {
 
 router.use(function(req, res, next) {
     log('info' , `new ${req.method} request on ${req.originalUrl}`);
-    if(req.method.toString() !== "POST" && req.method.toString() !== "GET" ){     
+    if(req.method.toString() !== "POST" && req.method.toString() !== "GET"){     
         log('error' , `${req.method} is not correct for ${req.originalUrl}`);
         return res.status(400).json({message: "Bad Request (request method error)"});
     }
@@ -55,5 +55,6 @@ router.get('/:id' , (req , res) => {
         return res.status(400).json({message: "Bad Request (not found)"});
     })
 });
+
 
 module.exports = router;

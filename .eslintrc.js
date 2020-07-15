@@ -17,14 +17,14 @@ module.exports = {
         "ecmaVersion": 2020
     },
     "rules": {
-        "node/exports-style": ["warning", "module.exports"],
-        "node/file-extension-in-import": ["warning", "always"],
-        "node/prefer-global/buffer": ["warning", "always"],
-        "node/prefer-global/console": ["warning", "always"],
-        "node/prefer-global/process": ["warning", "always"],
-        "node/prefer-global/url-search-params": ["warning", "always"],
-        "node/prefer-global/url": ["warning", "always"],
-        "node/prefer-promises/dns": "warning",
-        "node/prefer-promises/fs": "warning"
+        "node/exports-style": ["warn", "module.exports"],
+        "node/file-extension-in-import": ["warn", "always"],
+        "node/prefer-global/buffer": ["warn", "always"],
+        "node/prefer-global/console": ["warn", "always"],
+        "node/prefer-global/process": ["warn", "always"],
+        "node/prefer-global/url-search-params": ["warn", "always"],
+        "node/prefer-global/url": ["warn", "always"],
+        "node/prefer-promises/dns": "warn",
+        "node/prefer-promises/fs": "warn"
     }
 };

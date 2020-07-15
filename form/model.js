@@ -45,8 +45,16 @@ const formSchema = new Schema({
       }
     ],
     required: true
-  },
+  }
+},
+{
+  toJSON: {
+    transform: function (doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+    }
+  }
 });
 
-formSchema.set('toJSON', { getters: true, virtuals: false });
 module.exports = mongoose.model('Form', formSchema);

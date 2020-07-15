@@ -10,7 +10,15 @@ const formAnswerSchema = new Schema({
   value: {
     type: Schema.Types.Mixed
   }
+},
+{
+  toJSON: {
+    transform: function (doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+    }
+  }
 });
 
-formAnswerSchema.set('toJSON', { getters: true, virtuals: false });
 module.exports = mongoose.model('FormAnswer', formAnswerSchema);

@@ -20,7 +20,6 @@ let createFormAnswer = async (formAnswerJson) => {
     let promise = new Promise((resolve , reject)=>{
         Form.findById(formAnswerJson.formId).then(res=>{
             if (res){
-                console.log('okkkkkkkkkkkkkkk');
                 resolve('ok');
             }
             else{
@@ -31,9 +30,7 @@ let createFormAnswer = async (formAnswerJson) => {
         });
     });
     let result = await promise;
-    console.log(result);
     if (result === 'ok'){
-        console.log('kheili ok');
         return await formAnswer.save();
     }
     else{

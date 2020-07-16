@@ -19,7 +19,9 @@ const formAnswerSchema = new Schema({
 {
   toJSON: {
     transform: function (doc, ret) {
-      return ret = {id:ret._id , createAt: ret.createAt , ...ret.value};
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
     }
   }
 });

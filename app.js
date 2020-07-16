@@ -37,7 +37,7 @@ const forms_api = require('./form/api');
 app.use("/api/forms" , forms_api);
 
 const form_answer = require('./formAnswer/api');
-app.use('/api/formAnswers', form_answer);
+app.use('/api/form-answers', form_answer);
 
 app.use(function(req, res) {
 	    log('error' , `url: ${req.url} not found.`);

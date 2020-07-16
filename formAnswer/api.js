@@ -29,9 +29,9 @@ router.get('/' , (req , res)=>{
 router.post('/:id' , (req , res)=> {
     let answer = req.body;
     const id = req.params.id;
-    answer['value'] = {...answer};
+    answer['values'] = {...answer};
     answer['formId'] = id;
-    answer['createAt'] = new Date();
+    answer['createdAt'] = new Date();
     const resultPromise = service.createFormAnswer(answer);
     resultPromise.then(result => {
         console.log('here');

@@ -2,17 +2,17 @@ const FormAnswer = require('./model');
 const Form = require('./../form/model');
 
 let findAllAnswers = async ()=> {
-    return await FormAnswer.find();
+    return await FormAnswer.find().populate('formId');
 }
 
 let findAnswer = async (id)=> {
-    return await FormAnswer.findById(id);
+    return await FormAnswer.findById(id).populate('formId');
 }
 
 let findFormAnswers = async (id) => {
     return await FormAnswer.find()
     .where('formId')
-    .equals(id);
+    .equals(id).populate('formId');
 }
 
 let createFormAnswer = async (formAnswerJson) => {

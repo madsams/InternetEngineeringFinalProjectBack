@@ -1,6 +1,6 @@
 const data = require('./data');
 const log = require('./../logger/logger');
-
+const formService = require('./../form/service');
 
 let findAllAnswers = async ()=>{
     let promise = new Promise((resolve , reject)=>{
@@ -8,7 +8,8 @@ let findAllAnswers = async ()=>{
         .then(result=>{
             if(result){
                 let answers = result.map(answer=>{
-                    return answer.toJSON();
+                    console.log(answer);
+                    return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title };
                 });
                 log('info' , JSON.stringify(answers));
                 resolve({data:answers , message:'ok'});
@@ -31,6 +32,17 @@ let findAnswer = async (id) =>{
         data.findAnswer(id)
         .then(answer=>{
             if(answer){
+                let form = {...answer.formId.toJSON()};
+                form.formId = form.id;
+                delete form.id;
+                form.fields = form.fields.map(field=>{
+                    field['value'] = answer.values[field.name];
+                    return field;
+                });
+                answer = answer.toJSON();
+                delete answer.values;
+                delete answer.formId;
+                answer = {...answer , ...form};
                 log('info' , JSON.stringify(answer));
                 resolve({data:answer , message:'ok'});
             }
@@ -53,7 +65,8 @@ let findFormAnswers = async (id) => {
         .then(result=>{
             if (result){
                 let answers = result.map(answer=>{
-                    return answer.toJSON();
+                    console.log(answer);
+                    return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title };
                 });
                 log('info' , JSON.stringify(answers));
                 resolve({data:answers , message:'ok'});
@@ -76,7 +89,7 @@ let createFormAnswer = async (formAnswerJson) =>{
         data.createFormAnswer(formAnswerJson)
         .then(result=>{
             log('info' , JSON.stringify(result.toJSON()));
-            resolve({data:result.toJSON() , message:'ok'});
+            resolve({data:{formAnswerId:result.toJSON().id} , message:'ok'});
         })
         .catch(err => {
             log('error' , err);

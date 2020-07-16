@@ -7,11 +7,11 @@ const formAnswerSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Form'
   },
-  value: {
+  values: {
     type: Schema.Types.Mixed,
     required: true
   },
-  createAt: {
+  createdAt: {
     type: Date,
     required: true
   }

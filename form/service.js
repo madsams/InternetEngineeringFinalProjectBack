@@ -7,6 +7,7 @@ let getForms = async () =>{
             if (forms){
                 let result = forms.map(form => {
                     let res = form.toJSON();
+                    delete res.fields;
                     return res;
                 });
                 log('info' , JSON.stringify(result));

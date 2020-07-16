@@ -39,6 +39,9 @@ app.use("/api/forms" , forms_api);
 const form_answer = require('./formAnswer/api');
 app.use('/api/form-answers', form_answer);
 
+const areas_api = require('./area/api');
+app.use('/api/areas' , areas_api);
+
 app.use(function(req, res) {
 	    log('error' , `url: ${req.url} not found.`);
 	    return res.status(404).json({message: `url: ${req.url} Not found.`});

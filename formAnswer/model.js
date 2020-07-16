@@ -8,7 +8,12 @@ const formAnswerSchema = new Schema({
     ref: 'Form'
   },
   value: {
-    type: Schema.Types.Mixed
+    type: Schema.Types.Mixed,
+    required: true
+  },
+  createAt: {
+    type: Date,
+    required: true
   }
 },
 {

@@ -54,10 +54,18 @@ let getCoveredAreas = async (point) =>{
                 let result = []
                 areas.forEach(area => {
                     let res = area.toJSON();
-                    area.geometry.coordinates.forEach((coordinates)=>{
-                        if(Point.isInsidePolygon(point, coordinates) === true)
-                            result.push(res.name);
-                    });
+                    let BreakException = {};
+                    try{
+                        area.geometry.coordinates.forEach((coordinates)=>{
+                            if(Point.isInsidePolygon(point, coordinates) === true){
+                                result.push(res.name);
+                                throw BreakException;
+                            }
+                        });
+                    }
+                    catch(e){
+                        
+                    }
                 });
                 log('info' , JSON.stringify(result));
                 resolve({data:result , message:'ok'});

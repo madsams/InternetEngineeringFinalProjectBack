@@ -31,17 +31,20 @@ const formSchema = new Schema({
         required: {
           type: Boolean,
         },
-        options: [
-          {
-            label: {
-              type: String,
-              required: true
-            },
-            value: {
-              type: Schema.Types.Mixed
+        options: { 
+          type: [
+            {
+              label: {
+                type: String,
+                required: true
+              },
+              value: {
+                type: Schema.Types.Mixed
+              }
             }
-          }
-        ]
+          
+          ]
+        }
       }
     ],
     required: true
@@ -53,6 +56,19 @@ const formSchema = new Schema({
       ret.id = ret._id;
       delete ret._id;
       delete ret.__v;
+      ret.fields = ret.fields.map(field => {
+          delete field._id;
+          if (field.options.length  === 0){
+            delete field.options;
+          }
+          else{
+            field.options = field.options.map(option=>{
+              delete option._id;
+              return option;
+            });
+          }
+          return field;
+      });
     }
   }
 });

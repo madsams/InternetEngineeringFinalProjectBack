@@ -68,7 +68,7 @@ let getCoveredAreas = async (point) =>{
                     }
                 });
                 log('info' , JSON.stringify(result));
-                resolve({body: result, status: 200git });
+                resolve({body: result, status: 200});
             }
             else{
                 log('error' , 'query failed');

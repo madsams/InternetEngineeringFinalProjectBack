@@ -9,7 +9,7 @@ let getAreas = async () =>{
             if (areas){
                 let result = areas.map(area => {
                     let res = area.toJSON();
-                    return {name:res.name , id:res.id};
+                    return res;
                 });
                 log('info' , JSON.stringify(result));
                 resolve({data:result , message:'ok'});

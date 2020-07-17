@@ -9,4 +9,4 @@ let addArea = async (polygon)=>{
     return await area.save();
 }
 
-module.exports = {getAreas , addArea , getAreas};
+module.exports = {getAreas , addArea};

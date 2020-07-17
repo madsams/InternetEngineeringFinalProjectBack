@@ -2,7 +2,7 @@ const express = require('express');
 const log = require('./../logger/logger');
 const service = require('./service');
 const {check, validationResult} = require('express-validator');
-const checks = [check('long').isFloat(),check('lat').isFloat()];
+const checks = [check('lng').isFloat(),check('lat').isFloat()];
 const router = express.Router();
 const errorFormatter = ({ location, msg, param}) => {
     return ` ${param} -> ${msg} `;
@@ -23,7 +23,7 @@ router.get('/testpoint', checks, function(req, res) {
         log('error' , `${errors.array()}`);
 	    return res.status(400).json({message: "Bad Request (params error)"});
     }
-	const point = [req.query.long, req.query.lat];
+	const point = [req.query.lng, req.query.lat];
 	service.getCoveredAreas(point).then((result) =>{
         return res.status(200).json(result);
     })

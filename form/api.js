@@ -20,10 +20,10 @@ router.use(function(req, res, next) {
 router.get('/' , (req , res)=> {
     let resultPromise = service.getForms();
     resultPromise.then(result =>{
-        return res.status(200).json(result);
+        return res.status(result.status).json(result.body);
     })
     .catch(err=>{
-        return res.status(400).json(err);
+        return res.status(err.status).json(err.body);
     });
 });
 
@@ -31,10 +31,10 @@ router.post('/' , (req , res)=> {
     const form = req.body;
     let resultPromise = service.createForm(form);
     resultPromise.then(result =>{
-        return res.status(200).json(result);
+        return res.status(result.status).json(result.body);
     })
     .catch(err=>{
-        return res.status(400).json(err);
+        return res.status(err.status).json(err.body);
     });
 });
 
@@ -42,10 +42,10 @@ router.get('/:id' , (req , res) => {
     const id = req.params.id;
     let resultPromise = service.getForm(id);
     resultPromise.then(result =>{
-        return res.status(200).json(result);
+        return res.status(result.status).json(result.body);
     })
     .catch(err=>{
-        return res.status(400).json(err);
+        return res.status(err.status).json(err.body);
     });
 });
 

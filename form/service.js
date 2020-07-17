@@ -1,5 +1,6 @@
 const data = require('./data');
 const log = require('./../logger/logger');
+const { body } = require('express-validator');
 
 let getForms = async () =>{
     let promise = new Promise((resolve , reject)=>{
@@ -11,15 +12,15 @@ let getForms = async () =>{
                     return res;
                 });
                 log('info' , JSON.stringify(result));
-                resolve({data:result , message:'ok'});
+                resolve({body:{data:result , message:'ok'} , status:200});
             }
             else{
                 log('error' , 'query failed');
-                reject({data:null,message:'query failed'});
+                reject({body: {message:'query failed'}, status:500});
             }
         }).catch(err =>{
             log('error' , err);
-            reject({data:null , message:err});
+            reject({body: {message:err} , status:400});
         });
     });
     return await promise;
@@ -31,15 +32,15 @@ let getForm = async (id) =>{
             if (form){
                 let result = form.toJSON();
                 log('info' , JSON.stringify(result));
-                resolve({data:result , message:'ok'});
+                resolve({body:{data:result , message:'ok'} , status:200});
             }
             else{
                 log('error', `not find form with id= ${id}`);
-                reject({data:null,message:`not find form with id= ${id}`});
+                reject({body: {message:`not find form with id= ${id}`} , status:400});
             }
         }).catch(err =>{
             log('error' , err);
-            reject({data:null , message:err});
+            reject({body: {message:err} , status:400});
         });
     });
     return await promise;
@@ -47,15 +48,22 @@ let getForm = async (id) =>{
 
 let createForm = async (formJson)=>{
     let promise = new Promise((resolve , reject)=>{
-        data.createForm(formJson).then(form=>{
-            let result = form.toJSON();
-            log('info' , JSON.stringify(result));
-            resolve({data:result , message:'ok'});
-        })
-        .catch(err=>{
-            log('error' , err);
-            reject({data:null , message:err});
-        });
+        if (formJson.fields && formJson.fields.length > 0){
+            data.createForm(formJson).then(form=>{
+                let result = form.toJSON();
+                log('info' , JSON.stringify(result));
+                delete result.fields;
+                resolve({body:{data:result , message:'ok'} , status:200});
+            })
+            .catch(err=>{
+                log('error' , err);
+                reject({body: {message:err} , status:422});
+            });
+        }
+        else{
+            log('error' , 'Path `fields` is required.');
+            reject({body: {message:'Path `fields` is required.'}, status:422});
+        }
     });
     return await promise;
 }

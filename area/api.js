@@ -21,32 +21,32 @@ router.get('/testpoint', checks, function(req, res) {
     const errors = validationResult(req).formatWith(errorFormatter);
     if (!errors.isEmpty()){
         log('error' , `${errors.array()}`);
-	    return res.status(400).json({message: "Bad Request (params error)"});
+	    return res.status(422).json({message: "Bad Request (params error)"});
     }
 	const point = [req.query.lng, req.query.lat];
 	service.getCoveredAreas(point).then((result) =>{
-        return res.status(200).json(result);
+        return res.status(result.status).json(result.body);
     })
     .catch(err=>{
-        return res.status(400).json(err);
+        return res.status(err.status).json(err.body);
     });
 });
 
 router.get('/', (req , res)=>{
     service.getAreas().then(result=>{
-        return res.status(200).json(result);
+        return res.status(result.status).json(result.body);
     })
     .catch(err=>{
-        return res.status(400).json(err);
+        return res.status(err.status).json(err.body);
     });
 });
 
 router.post('/', (req , res)=>{
     const area = req.body;
     service.addArea(area).then(result=>{
-        return res.status(200).json(result);
+        return res.status(result.status).json(result.body);
     }).catch(err=>{
-        return res.status(400).json(err);
+        return res.status(err.status).json(err.body);
     });
 });
 

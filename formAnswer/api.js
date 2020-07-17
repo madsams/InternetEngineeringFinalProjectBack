@@ -19,10 +19,10 @@ router.use(function(req, res, next) {
 
 router.get('/' , (req , res)=>{
     service.findAllAnswers().then(result=>{
-        return res.status(200).json(result);
+        return res.status(result.status).json(result.body);
     })
     .catch(err =>{
-        return res.status(400).json(err);
+        return res.status(err.status).json(err.body);
     });
 });
 
@@ -35,10 +35,10 @@ router.post('/:id' , (req , res)=> {
     const resultPromise = service.createFormAnswer(answer);
     resultPromise.then(result => {
         console.log('here');
-        return res.status(200).json(result);
+        return res.status(result.status).json(result.body);
     })
     .catch(err => {
-        return res.status(400).json(err);
+        return res.status(err.status).json(err.body);
     });
 });
 
@@ -49,17 +49,17 @@ router.get('/:id' , (req , res) => {
         return res.status(200).json(answer);
     })
     .catch(err=>{
-        return res.status(400).json(err);
+        return res.status(err.status).json(err.body);
     })
 });
 
 router.get('/form/:id' , (req , res)=> {
     const id = req.params.id;
     service.findFormAnswers(id).then(result => {
-        return res.status(200).json(result);
+        return res.status(result.status).json(result.body);
     })
     .catch(err=>{
-        return res.status(400).json(err);
+        return res.status(err.status).json(err.body);
     });
 });
 

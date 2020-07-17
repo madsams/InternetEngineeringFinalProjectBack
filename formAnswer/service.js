@@ -12,16 +12,16 @@ let findAllAnswers = async ()=>{
                     return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title };
                 });
                 log('info' , JSON.stringify(answers));
-                resolve({data:answers , message:'ok'});
+                resolve({body: {data:answers , message:'ok'} , status: 200});
             }
             else{
                 log('error' , 'query failed');
-                reject({data:null,message:'query failed'});
+                reject({body: {message:'query failed'} , status:500});
             }
         })
         .catch(err =>{
             log('error' , err);
-            reject({data:null , message:err});
+            reject({body: {message:err} , status:400});
         });
     });
     return await promise;
@@ -44,16 +44,16 @@ let findAnswer = async (id) =>{
                 delete answer.formId;
                 answer = {...answer , ...form};
                 log('info' , JSON.stringify(answer));
-                resolve({data:answer , message:'ok'});
+                resolve({body: {data:answer , message:'ok'} ,status:200});
             }
             else{
                 log('error', `not find answer with id= ${id}`);
-                reject({data:null,message:`not find answer with id= ${id}`});
+                reject({body: {message:`not find answer with id= ${id}`} , status: 400});
             }
         })
         .catch(err =>{
             log('error' , err);
-            reject({data:null , message:err});
+            reject({body: {message:err} , status: 400});
         });
     });
     return await promise;
@@ -69,16 +69,16 @@ let findFormAnswers = async (id) => {
                     return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title };
                 });
                 log('info' , JSON.stringify(answers));
-                resolve({data:answers , message:'ok'});
+                resolve({body: {data:answers , message:'ok'} , status: 200});
             }
             else{
                 log('error' , `no form with id= ${id}`);
-                reject({data:null , message: `no form with id= ${id}`});
+                reject({body: {message: `no form with id= ${id}`} , status: 400});
             } 
         })
         .catch(err=>{
             log('error' , err);
-            reject({data:null , message:err});
+            reject({body: {message:err}, status:400});
         });
     });
     return await promise;
@@ -89,11 +89,11 @@ let createFormAnswer = async (formAnswerJson) =>{
         data.createFormAnswer(formAnswerJson)
         .then(result=>{
             log('info' , JSON.stringify(result.toJSON()));
-            resolve({data:{formAnswerId:result.toJSON().id} , message:'ok'});
+            resolve({body: {data:{formAnswerId:result.toJSON().id} , message:'ok'} , status: 200});
         })
         .catch(err => {
             log('error' , err);
-            reject({data:null , message:err});
+            reject({body: {message:err} , status: 422});
         });
     });
     return await promise;

@@ -12,15 +12,15 @@ let getAreas = async () =>{
                     return res;
                 });
                 log('info' , JSON.stringify(result));
-                resolve({data:result , message:'ok'});
+                resolve({body: {data:result , message:'ok'} , status:200});
             }
             else{
                 log('error' , 'query failed');
-                reject({data:null,message:'query failed'});
+                reject({body: {message:'query failed'}, status:500});
             }
         }).catch(err =>{
             log('error' , err);
-            reject({data:null , message:err});
+            reject({body: {message:err} , status:400});
         });
     });
     return await promise;
@@ -33,15 +33,15 @@ let addArea = async (polygon)=>{
                 let res = area.toJSON();
                 let result = {name:res.name , id:res.id};
                 log('info' , JSON.stringify(res));
-                resolve({data:result , message:'ok'});
+                resolve({body: {data:result , message:'ok'}, status: 200});
             })
             .catch(err=>{
                 log('error' , err);
-                reject({data:null , message:err});
+                reject({body: {message:err} , status:422});
             });
         }
         else{
-            reject({data:null , message:'Bad Request'});
+            reject({body: {message:'validation error'}, status: 422});
         }
     });
     return await promise;
@@ -68,15 +68,15 @@ let getCoveredAreas = async (point) =>{
                     }
                 });
                 log('info' , JSON.stringify(result));
-                resolve({data:result , message:'ok'});
+                resolve({body: {data:result , message:'ok'}, status: 200});
             }
             else{
                 log('error' , 'query failed');
-                reject({data:null,message:'query failed'});
+                reject({body:{message:'query failed'} , status:500});
             }
         }).catch(err =>{
             log('error' , err);
-            reject({data:null , message:err});
+            reject({body: {message:err} , status:400});
         });
     });
     return await promise;

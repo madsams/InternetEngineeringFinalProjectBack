@@ -12,7 +12,7 @@ let getForms = async () =>{
                     return res;
                 });
                 log('info' , JSON.stringify(result));
-                resolve({body:{data:result , message:'ok'} , status:200});
+                resolve({body: result , status:200});
             }
             else{
                 log('error' , 'query failed');
@@ -32,7 +32,7 @@ let getForm = async (id) =>{
             if (form){
                 let result = form.toJSON();
                 log('info' , JSON.stringify(result));
-                resolve({body:{data:result , message:'ok'} , status:200});
+                resolve({body: result , status:200});
             }
             else{
                 log('error', `not find form with id= ${id}`);
@@ -53,7 +53,7 @@ let createForm = async (formJson)=>{
                 let result = form.toJSON();
                 log('info' , JSON.stringify(result));
                 delete result.fields;
-                resolve({body:{data:result , message:'ok'} , status:200});
+                resolve({body: result , status:201});
             })
             .catch(err=>{
                 log('error' , err);

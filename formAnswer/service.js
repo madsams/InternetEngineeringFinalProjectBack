@@ -12,7 +12,7 @@ let findAllAnswers = async ()=>{
                     return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title };
                 });
                 log('info' , JSON.stringify(answers));
-                resolve({body: {data:answers , message:'ok'} , status: 200});
+                resolve({body: answers , status: 200});
             }
             else{
                 log('error' , 'query failed');
@@ -44,7 +44,7 @@ let findAnswer = async (id) =>{
                 delete answer.formId;
                 answer = {...answer , ...form};
                 log('info' , JSON.stringify(answer));
-                resolve({body: {data:answer , message:'ok'} ,status:200});
+                resolve({body: answer ,status:200});
             }
             else{
                 log('error', `not find answer with id= ${id}`);
@@ -69,7 +69,7 @@ let findFormAnswers = async (id) => {
                     return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title };
                 });
                 log('info' , JSON.stringify(answers));
-                resolve({body: {data:answers , message:'ok'} , status: 200});
+                resolve({body: answers , status: 200});
             }
             else{
                 log('error' , `no form with id= ${id}`);
@@ -89,7 +89,7 @@ let createFormAnswer = async (formAnswerJson) =>{
         data.createFormAnswer(formAnswerJson)
         .then(result=>{
             log('info' , JSON.stringify(result.toJSON()));
-            resolve({body: {data:{formAnswerId:result.toJSON().id} , message:'ok'} , status: 200});
+            resolve({body: {formAnswerId:result.toJSON().id} , status: 201});
         })
         .catch(err => {
             log('error' , err);

@@ -12,7 +12,7 @@ let getAreas = async () =>{
                     return res;
                 });
                 log('info' , JSON.stringify(result));
-                resolve({body: {data:result , message:'ok'} , status:200});
+                resolve({body: result , status:200});
             }
             else{
                 log('error' , 'query failed');
@@ -33,7 +33,7 @@ let addArea = async (polygon)=>{
                 let res = area.toJSON();
                 let result = {name:res.name , id:res.id};
                 log('info' , JSON.stringify(res));
-                resolve({body: {data:result , message:'ok'}, status: 200});
+                resolve({body: result, status: 200});
             })
             .catch(err=>{
                 log('error' , err);
@@ -68,7 +68,7 @@ let getCoveredAreas = async (point) =>{
                     }
                 });
                 log('info' , JSON.stringify(result));
-                resolve({body: {data:result , message:'ok'}, status: 200});
+                resolve({body: result, status: 201});
             }
             else{
                 log('error' , 'query failed');

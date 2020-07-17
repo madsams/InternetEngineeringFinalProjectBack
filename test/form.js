@@ -127,24 +127,6 @@ describe("/POST form", () => {
 
 	});
 
-	it('it should not create a form with two identical id', (done) => {
-
-		// TODO make it work
-		let first_id;
-		let second_id;
-		chai.request(server)
-			.post('/api/forms')
-			.send(fakeForm)
-			.end((err, res) => {
-				res.should.have.status(200);
-				first_id = res.body.id;
-				done();
-			});
-
-		// first_id.should.not.eq(second_id);
-
-	});
-
 	it('it should get the form created by given id', (done) => {
 		let resultPromise = service.createForm(fakeForm);
 		resultPromise.then(result =>{

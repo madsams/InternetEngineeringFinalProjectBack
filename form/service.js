@@ -53,7 +53,7 @@ let createForm = async (formJson)=>{
                 let result = form.toJSON();
                 log('info' , JSON.stringify(result));
                 delete result.fields;
-                resolve({body: result , status:201});
+                resolve({body: result , status:200});
             })
             .catch(err=>{
                 log('error' , err);

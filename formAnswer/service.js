@@ -89,7 +89,7 @@ let createFormAnswer = async (formAnswerJson) =>{
         data.createFormAnswer(formAnswerJson)
         .then(result=>{
             log('info' , JSON.stringify(result.toJSON()));
-            resolve({body: {formAnswerId:result.toJSON().id} , status: 201});
+            resolve({body: {formAnswerId:result.toJSON().id} , status: 200});
         })
         .catch(err => {
             log('error' , err);

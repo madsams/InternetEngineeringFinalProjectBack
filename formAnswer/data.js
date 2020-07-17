@@ -23,11 +23,10 @@ let createFormAnswer = async (formAnswerJson) => {
                 resolve(formAnswer.save());
             }
             else{
-                reject(`not find form with id = ${formAnswerJson.formId}`);
+                reject({status:404 , body:{message:`not find form with id = ${formAnswerJson.formId}`}});
             }
         }).catch(err =>{
-            console.log(err);
-            reject(err);
+            reject({status:422 , body:{message:err}});
         });
     });
     return await promise;

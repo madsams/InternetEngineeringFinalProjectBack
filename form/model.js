@@ -39,7 +39,8 @@ const formSchema = new Schema({
                 required: true
               },
               value: {
-                type: Schema.Types.Mixed
+                type: Schema.Types.Mixed,
+                require: true
               }
             }
           

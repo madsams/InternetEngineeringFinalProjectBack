@@ -45,7 +45,7 @@ let addArea = async (polygon)=>{
         }
     });
     return await promise;
-}
+};
 
 let getCoveredAreas = async (point) =>{
     let promise = new Promise((resolve , reject)=>{
@@ -68,7 +68,7 @@ let getCoveredAreas = async (point) =>{
                     }
                 });
                 log('info' , JSON.stringify(result));
-                resolve({body: result, status: 200});
+                resolve({body: result, status: 200 });
             }
             else{
                 log('error' , 'query failed');
@@ -80,6 +80,6 @@ let getCoveredAreas = async (point) =>{
         });
     });
     return await promise;
-}
+};
 
 module.exports = {addArea , getAreas , getCoveredAreas};

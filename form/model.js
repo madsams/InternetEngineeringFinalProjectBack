@@ -7,6 +7,11 @@ const formSchema = new Schema({
     type: String,
     required: true
   },
+  createdAt:{
+    type: Date,
+    required:true
+  }
+  ,
   fields: {
     type: [
       {
@@ -39,7 +44,8 @@ const formSchema = new Schema({
                 required: true
               },
               value: {
-                type: Schema.Types.Mixed
+                type: Schema.Types.Mixed,
+                require: true
               }
             }
           

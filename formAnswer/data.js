@@ -2,7 +2,7 @@ const FormAnswer = require('./model');
 const Form = require('./../form/model');
 
 let findAllAnswers = async ()=> {
-    return await FormAnswer.find().populate('formId');
+    return await FormAnswer.find().sort({createdAt: 1}).populate('formId');
 }
 
 let findAnswer = async (id)=> {
@@ -10,7 +10,7 @@ let findAnswer = async (id)=> {
 }
 
 let findFormAnswers = async (id) => {
-    return await FormAnswer.find()
+    return await FormAnswer.find().sort({createdAt: 1})
     .where('formId')
     .equals(id).populate('formId');
 }
@@ -20,14 +20,22 @@ let createFormAnswer = async (formAnswerJson) => {
     let promise = new Promise((resolve , reject)=>{
         Form.findById(formAnswerJson.formId).then(res=>{
             if (res){
-                resolve(formAnswer.save());
+                let ok = true;
+                res.fields.forEach(field => {
+                    if (field.required && !formAnswerJson.values[field.name]){
+                        ok = false;
+                        reject({status:422 , body: {message:"form answer is not complete"}});
+                        return;
+                    }
+                });
+                if (ok === true)
+                    resolve(formAnswer.save());
             }
             else{
-                reject(`not find form with id = ${formAnswerJson.formId}`);
+                reject({status:404 , body:{message:`not find form with id = ${formAnswerJson.formId}`}});
             }
         }).catch(err =>{
-            console.log(err);
-            reject(err);
+            reject({status:422 , body:{message:err}});
         });
     });
     return await promise;

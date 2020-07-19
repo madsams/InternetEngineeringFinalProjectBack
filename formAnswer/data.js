@@ -2,7 +2,7 @@ const FormAnswer = require('./model');
 const Form = require('./../form/model');
 
 let findAllAnswers = async ()=> {
-    return await FormAnswer.find().populate({path: 'formId', options: { sort: { 'createdAt': -1}}});
+    return await FormAnswer.find().sort({createdAt: 1}).populate('formId');
 }
 
 let findAnswer = async (id)=> {
@@ -10,7 +10,7 @@ let findAnswer = async (id)=> {
 }
 
 let findFormAnswers = async (id) => {
-    return await FormAnswer.find()
+    return await FormAnswer.find().sort({createdAt: 1})
     .where('formId')
     .equals(id).populate('formId');
 }

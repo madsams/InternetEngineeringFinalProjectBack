@@ -1,6 +1,7 @@
 const data = require('./data');
 const log = require('./../logger/logger');
-const formService = require('./../form/service');
+const Form = require('./../form/model');
+const { forms } = require('../form/data');
 
 let findAllAnswers = async ()=>{
     let promise = new Promise((resolve , reject)=>{
@@ -87,12 +88,39 @@ let createFormAnswer = async (formAnswerJson) =>{
     let promise = new Promise((resolve , reject)=>{
         data.createFormAnswer(formAnswerJson)
         .then(result=>{
-            log('info' , JSON.stringify(result.toJSON()));
-            resolve({body: {formAnswerId:result.toJSON().id} , status: 200});
+            Form.findById(formAnswerJson.formId).then(form=>{
+                if (form){
+                    
+                    let ok = true;
+                    form.fields.forEach(field => {
+                        if (field.required && !formAnswerJson.values[field.name]){
+                            ok = false;
+                            reject({status:422 , body: {message:"form answer is not complete"}});
+                            return;
+                        }
+                    });
+                    if (ok === true){
+                        form.answersCount++;
+                        form.records.push(result._id);
+                        form.save().then(()=>{
+                            log('info' , JSON.stringify(result.toJSON()));
+                            resolve({body: {formAnswerId:result.toJSON().id} , status: 200});
+                        })
+                        .catch(err=>{
+                            reject(({body:{message:err} ,status:500}));
+                        });
+                    }
+                }
+                else{
+                    reject({status:404 , body:{message:`not find form with id = ${formAnswerJson.formId}`}});
+                }
+            }).catch(err =>{
+                reject({status:422 , body:{message:err}});
+            });
         })
         .catch(err => {
             log('error' , err.body.message);
-            reject(err);
+            reject({status:500 , body:{message: err}});
         });
     });
     return await promise;

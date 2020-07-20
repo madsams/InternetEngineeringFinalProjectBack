@@ -30,6 +30,7 @@ router.get('/' , (req , res)=> {
 router.post('/' , (req , res)=> {
     const form = req.body;
     form.createdAt = new Date();
+    form.answersCount = 0;
     let resultPromise = service.createForm(form);
     resultPromise.then(result =>{
         return res.status(result.status).json(result.body);

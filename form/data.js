@@ -1,11 +1,11 @@
 const Form = require('./model');
 
 let forms = async ()=>{
-    return await Form.find().sort({createdAt: 1});
+    return await Form.find().sort({createdAt: -1});
 }
 
 let form = async (id) =>{
-    return await Form.findById(id);
+    return await Form.findById(id).populate('records');
 }
 
 let createForm = async (formJson)=>{

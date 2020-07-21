@@ -88,12 +88,12 @@ let getFormAnswers = async (id)=>{
             if(form){
                 let result = form.toJSON();
                 result.records = result.records.map(answer=>{
-                    let values = answer.values;
-                    delete answer.values;
+                    // let values = answer.values;
+                    // delete answer.values;
                     delete answer.fromId;
                     answer.answerId = answer.id;
                     delete answer.id;
-                    answer = {...answer , ...values};
+                    // answer = {...answer , ...values};
                     return answer; 
                 });
                 result.sum ={};
@@ -101,8 +101,8 @@ let getFormAnswers = async (id)=>{
                     if (field.type === 'Number'){
                         result.sum[field.name] = 0;
                         result.records.forEach(answer => {
-                            if (answer[field.name])
-                                result.sum[field.name] += answer[field.name];
+                            if (answer.values[field.name])
+                                result.sum[field.name] += answer.values[field.name];
                         });
                     }
                 });

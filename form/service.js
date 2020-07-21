@@ -2,6 +2,7 @@ const data = require('./data');
 const log = require('./../logger/logger');
 const sortJsonArray = require('sort-json-array');
 
+
 let getForms = async () =>{
     let promise = new Promise((resolve , reject)=>{
         data.forms().then(forms=>{
@@ -32,27 +33,17 @@ let getForm = async (id) =>{
         data.form(id).then(form=>{
             if (form){
                 let result = form.toJSON();
-                result.records = result.records.map(answer=>{
-                    let values = answer.values;
-                    delete answer.values;
-                    delete answer.fromId;
-                    answer.answerId = answer.id;
-                    delete answer.id;
-                    answer = {...answer , ...values};
-                    return answer; 
-                });
                 result.sum ={};
                 result.fields.forEach(field => {
                     if (field.type === 'Number'){
                         result.sum[field.name] = 0;
                         result.records.forEach(answer => {
-                            if (answer[field.name])
-                                result.sum[field.name] += answer[field.name];
+                            if (answer.values[field.name])
+                                result.sum[field.name] += answer.values[field.name];
                         });
                     }
                 });
-                sortJsonArray(result.records , 'createdAt' , 'des');
-                delete result.answersCount;
+                delete result.records;
                 log('info' , JSON.stringify(result));
                 resolve({body: result , status:200});
             }
@@ -95,12 +86,29 @@ let getFormAnswers = async (id)=>{
     let promise = new Promise((resolve , reject)=>{
         data.formAnswers(id).then((result=>{
             if(result){
-                let form = result.toJSON();
-                let answers = form.records.map(answer=>{
+                let result = form.toJSON();
+                result.records = result.records.map(answer=>{
+                    let values = answer.values;
                     delete answer.values;
-                    answer.title = form.title;
+                    delete answer.fromId;
+                    answer.answerId = answer.id;
+                    delete answer.id;
+                    answer = {...answer , ...values};
                     return answer; 
                 });
+                result.sum ={};
+                result.fields.forEach(field => {
+                    if (field.type === 'Number'){
+                        result.sum[field.name] = 0;
+                        result.records.forEach(answer => {
+                            if (answer[field.name])
+                                result.sum[field.name] += answer[field.name];
+                        });
+                    }
+                });
+                delete result.fields;
+                delete result.answersCount;
+                sortJsonArray(result.records , 'createdAt' , 'des');
                 log('info' , JSON.stringify(answers));
                 resolve({body: answers , status: 200});
             }

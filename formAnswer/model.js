@@ -11,6 +11,10 @@ const formAnswerSchema = new Schema({
     type: Schema.Types.Mixed,
     required: true
   },
+  userId:{
+    type:String,
+    // required: true
+  },
   createdAt: {
     type: Date,
     required: true

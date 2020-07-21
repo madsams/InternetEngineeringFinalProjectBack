@@ -32,6 +32,7 @@ router.post('/:id' , (req , res)=> {
     answer['values'] = {...answer};
     answer['formId'] = id;
     answer['createdAt'] = new Date();
+    // answer['userId'] = req.user.id;
     const resultPromise = service.createFormAnswer(answer);
     resultPromise.then(result => {
         console.log('here');
@@ -52,17 +53,6 @@ router.get('/:id' , (req , res) => {
         return res.status(err.status).json(err.body);
     })
 });
-
-router.get('/form/:id' , (req , res)=> {
-    const id = req.params.id;
-    service.findFormAnswers(id).then(result => {
-        return res.status(result.status).json(result.body);
-    })
-    .catch(err=>{
-        return res.status(err.status).json(err.body);
-    });
-});
-
 
 
 module.exports = router;

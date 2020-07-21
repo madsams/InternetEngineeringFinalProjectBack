@@ -40,6 +40,7 @@
     "path": "^0.12.7",
     "point-in-polygon": "^1.0.1",
     "sinon": "^9.0.2",
+    "sort-json-array": "^0.1.7",
     "winston": "^3.3.3"
   },
   "devDependencies": {

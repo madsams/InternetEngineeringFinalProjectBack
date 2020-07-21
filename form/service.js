@@ -1,6 +1,6 @@
 const data = require('./data');
 const log = require('./../logger/logger');
-const { body } = require('express-validator');
+const sortJsonArray = require('sort-json-array');
 
 let getForms = async () =>{
     let promise = new Promise((resolve , reject)=>{
@@ -9,6 +9,7 @@ let getForms = async () =>{
                 let result = forms.map(form => {
                     let res = form.toJSON();
                     delete res.fields;
+                    delete res.records;
                     return res;
                 });
                 log('info' , JSON.stringify(result));
@@ -31,6 +32,27 @@ let getForm = async (id) =>{
         data.form(id).then(form=>{
             if (form){
                 let result = form.toJSON();
+                result.records = result.records.map(answer=>{
+                    let values = answer.values;
+                    delete answer.values;
+                    delete answer.fromId;
+                    answer.answerId = answer.id;
+                    delete answer.id;
+                    answer = {...answer , ...values};
+                    return answer; 
+                });
+                result.sum ={};
+                result.fields.forEach(field => {
+                    if (field.type === 'Number'){
+                        result.sum[field.name] = 0;
+                        result.records.forEach(answer => {
+                            if (answer[field.name])
+                                result.sum[field.name] += answer[field.name];
+                        });
+                    }
+                });
+                sortJsonArray(result.records , 'createdAt' , 'des');
+                delete result.answersCount;
                 log('info' , JSON.stringify(result));
                 resolve({body: result , status:200});
             }
@@ -53,6 +75,7 @@ let createForm = async (formJson)=>{
                 let result = form.toJSON();
                 log('info' , JSON.stringify(result));
                 delete result.fields;
+                delete result.records;
                 resolve({body: result , status:200});
             })
             .catch(err=>{
@@ -68,4 +91,30 @@ let createForm = async (formJson)=>{
     return await promise;
 }
 
-module.exports = {getForms , getForm , createForm};
+let getFormAnswers = async (id)=>{
+    let promise = new Promise((resolve , reject)=>{
+        data.formAnswers(id).then((result=>{
+            if(result){
+                let form = result.toJSON();
+                let answers = form.records.map(answer=>{
+                    delete answer.values;
+                    answer.title = form.title;
+                    return answer; 
+                });
+                log('info' , JSON.stringify(answers));
+                resolve({body: answers , status: 200});
+            }
+            else{
+                log('error' , `no form with id= ${id}`);
+                reject({body: {message: `no form with id= ${id}`} , status: 404});
+            }
+        }))
+        .catch(err=>{
+            log('error' , err);
+            reject({body: {message:err}, status:400});
+        });
+    });
+    return await promise;
+}
+
+module.exports = {getForms , getForm , createForm , getFormAnswers};

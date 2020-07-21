@@ -54,7 +54,15 @@ const formSchema = new Schema({
       }
     ],
     required: true
-  }
+  },
+  answersCount: {
+    type:Number,
+    required:true
+  },
+  records:[{
+    type: Schema.Types.ObjectId,
+    ref: 'FormAnswer'
+  }]
 },
 {
   toJSON: {

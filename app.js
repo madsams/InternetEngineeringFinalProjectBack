@@ -40,7 +40,6 @@ const strategy = new Auth0Strategy(
     return done(null, profile);
   }
 );
-
 passport.use(strategy);
 app.use(passport.initialize());
 app.use(passport.session());
@@ -52,7 +51,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
-
 
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -72,6 +70,7 @@ app.use(function(req, res, next) {
 });
 
 const secured = (req, res, next) => {
+  req.user = myUser;
   if (req.user) {
     return next();
   }
@@ -84,8 +83,11 @@ app.use((req, res, next) => {
   next();
 });
 
+
 const auth_api = require('./authentication/auth');
 app.use("/", auth_api);
+
+// app.use(secured);
 
 const forms_api = require('./form/api');
 app.use("/api/forms" , forms_api);
@@ -97,7 +99,8 @@ const areas_api = require('./area/api');
 app.use('/api/areas' , areas_api);
 
 app.use(function(req, res) {
-	    log('error' , `url: ${req.url} not found.`);
+      log('error' , `url: ${req.url} not found.`);
+      // console.log(req.headers['user-agent']);
 	    return res.status(404).json({message: `url: ${req.url} Not found.`});
 });
 

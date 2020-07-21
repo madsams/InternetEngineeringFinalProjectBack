@@ -93,10 +93,12 @@ let createForm = async (formJson)=>{
 
 let getFormAnswers = async (id)=>{
     let promise = new Promise((resolve , reject)=>{
-        data.formAnswers(id).then((form=>{
-            if(form){
+        data.formAnswers(id).then((result=>{
+            if(result){
+                let form = result.toJSON();
                 let answers = form.records.map(answer=>{
                     delete answer.values;
+                    answer.title = form.title;
                     return answer; 
                 });
                 log('info' , JSON.stringify(answers));

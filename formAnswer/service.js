@@ -1,7 +1,6 @@
 const data = require('./data');
 const log = require('./../logger/logger');
 const Form = require('./../form/model');
-const { forms } = require('../form/data');
 
 let findAllAnswers = async ()=>{
     let promise = new Promise((resolve , reject)=>{
@@ -36,6 +35,8 @@ let findAnswer = async (id) =>{
                 let form = {...answer.formId.toJSON()};
                 form.formId = form.id;
                 delete form.id;
+                delete form.records;
+                delete form.answersCount;
                 form.fields = form.fields.map(field=>{
                     field['value'] = answer.values[field.name];
                     return field;
@@ -43,6 +44,7 @@ let findAnswer = async (id) =>{
                 answer = answer.toJSON();
                 delete answer.values;
                 delete answer.formId;
+                delete answer.userId;
                 answer = {...answer , ...form};
                 log('info' , JSON.stringify(answer));
                 resolve({body: answer ,status:200});

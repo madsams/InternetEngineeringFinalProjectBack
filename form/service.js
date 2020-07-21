@@ -84,8 +84,8 @@ let createForm = async (formJson)=>{
 
 let getFormAnswers = async (id)=>{
     let promise = new Promise((resolve , reject)=>{
-        data.formAnswers(id).then((result=>{
-            if(result){
+        data.formAnswers(id).then((form=>{
+            if(form){
                 let result = form.toJSON();
                 result.records = result.records.map(answer=>{
                     let values = answer.values;
@@ -109,8 +109,8 @@ let getFormAnswers = async (id)=>{
                 delete result.fields;
                 delete result.answersCount;
                 sortJsonArray(result.records , 'createdAt' , 'des');
-                log('info' , JSON.stringify(answers));
-                resolve({body: answers , status: 200});
+                log('info' , JSON.stringify(result));
+                resolve({body: result , status: 200});
             }
             else{
                 log('error' , `no form with id= ${id}`);

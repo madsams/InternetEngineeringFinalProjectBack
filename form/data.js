@@ -13,4 +13,8 @@ let createForm = async (formJson)=>{
     return await form.save();
 }
 
-module.exports = {forms , form , createForm};
+let formAnswers = async (id)=>{
+    return await Form.findById(id).populate('records');
+}
+
+module.exports = {forms , form , createForm , formAnswers};

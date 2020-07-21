@@ -60,30 +60,6 @@ let findAnswer = async (id) =>{
     return await promise;
 }
 
-let findFormAnswers = async (id) => {
-    let promise = new Promise((resolve , reject)=>{
-        data.findFormAnswers(id)
-        .then(result=>{
-            if (result){
-                let answers = result.map(answer=>{
-                    return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title };
-                });
-                log('info' , JSON.stringify(answers));
-                resolve({body: answers , status: 200});
-            }
-            else{
-                log('error' , `no form with id= ${id}`);
-                reject({body: {message: `no form with id= ${id}`} , status: 404});
-            } 
-        })
-        .catch(err=>{
-            log('error' , err);
-            reject({body: {message:err}, status:400});
-        });
-    });
-    return await promise;
-}
-
 let createFormAnswer = async (formAnswerJson) =>{
     let promise = new Promise((resolve , reject)=>{
         data.createFormAnswer(formAnswerJson)
@@ -126,4 +102,4 @@ let createFormAnswer = async (formAnswerJson) =>{
     return await promise;
 }
 
-module.exports = {findAllAnswers , findAnswer , findFormAnswers , createFormAnswer};
+module.exports = {findAllAnswers , findAnswer , createFormAnswer};

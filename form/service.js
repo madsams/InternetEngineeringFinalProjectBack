@@ -1,7 +1,6 @@
 const data = require('./data');
 const log = require('./../logger/logger');
 const sortJsonArray = require('sort-json-array');
-const { forms } = require('./data');
 
 let getForms = async () =>{
     let promise = new Promise((resolve , reject)=>{
@@ -92,4 +91,28 @@ let createForm = async (formJson)=>{
     return await promise;
 }
 
-module.exports = {getForms , getForm , createForm};
+let getFormAnswers = async (id)=>{
+    let promise = new Promise((resolve , reject)=>{
+        data.formAnswers(id).then((form=>{
+            if(form){
+                let answers = form.records.map(answer=>{
+                    delete answer.values;
+                    return answer; 
+                });
+                log('info' , JSON.stringify(answers));
+                resolve({body: answers , status: 200});
+            }
+            else{
+                log('error' , `no form with id= ${id}`);
+                reject({body: {message: `no form with id= ${id}`} , status: 404});
+            }
+        }))
+        .catch(err=>{
+            log('error' , err);
+            reject({body: {message:err}, status:400});
+        });
+    });
+    return await promise;
+}
+
+module.exports = {getForms , getForm , createForm , getFormAnswers};

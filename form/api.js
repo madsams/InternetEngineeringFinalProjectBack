@@ -40,6 +40,18 @@ router.post('/' , (req , res)=> {
     });
 });
 
+
+router.get('/:id/form-answers', (req , res)=>{
+    const id = req.params.id;
+    let resultPromise = service.getFormAnswers(id);
+    resultPromise.then(result =>{
+        return res.status(result.status).json(result.body);
+    })
+    .catch(err=>{
+        return res.status(err.status).json(err.body);
+    });
+})
+
 router.get('/:id' , (req , res) => {
     const id = req.params.id;
     let resultPromise = service.getForm(id);
@@ -50,5 +62,6 @@ router.get('/:id' , (req , res) => {
         return res.status(err.status).json(err.body);
     });
 });
+
 
 module.exports = router;

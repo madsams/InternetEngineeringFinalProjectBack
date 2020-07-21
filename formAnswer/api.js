@@ -53,16 +53,5 @@ router.get('/:id' , (req , res) => {
     })
 });
 
-router.get('/form/:id' , (req , res)=> {
-    const id = req.params.id;
-    service.findFormAnswers(id).then(result => {
-        return res.status(result.status).json(result.body);
-    })
-    .catch(err=>{
-        return res.status(err.status).json(err.body);
-    });
-});
-
-
 
 module.exports = router;

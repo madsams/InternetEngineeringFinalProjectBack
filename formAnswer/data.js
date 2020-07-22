@@ -13,4 +13,8 @@ let createFormAnswer = async (formAnswerJson) => {
     return await formAnswer.save();
 }
 
-module.exports = {findAllAnswers , findAnswer , createFormAnswer};
+let deleteFormAnswer = async (id) => {
+    return await FormAnswer.findByIdAndRemove(id);
+}
+
+module.exports = {findAllAnswers , findAnswer , createFormAnswer , deleteFormAnswer};

@@ -17,4 +17,14 @@ let formAnswers = async (id)=>{
     return await Form.findById(id).populate('records');
 }
 
-module.exports = {forms , form , createForm , formAnswers};
+let deleteForm = async (id)=>{
+    return await Form.deleteOne({_id:id});
+}
+
+let update = async (formId , answerId)=>{
+    return await Form.findByIdAndUpdate(
+        formId, { $pull: { "records": answerId}}, { safe: true, upsert: true }
+    );
+}
+
+module.exports = {forms , form , createForm , formAnswers , deleteForm , update};

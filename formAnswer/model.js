@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
+// const Form = require('./../form/model');
 
 const formAnswerSchema = new Schema({
   formId: {
@@ -23,6 +23,7 @@ const formAnswerSchema = new Schema({
 {
   toJSON: {
     transform: function (doc, ret) {
+	  console.log(ret);
       ret.id = ret._id;
       delete ret._id;
       delete ret.__v;

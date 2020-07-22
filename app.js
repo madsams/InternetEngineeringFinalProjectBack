@@ -106,7 +106,7 @@ app.use(function(req, res) {
 
 const connectionString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS}@cluster0.rbxbu.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 mongoose
-  .connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false  })
   .then(() => {
     app.listen(port , function(){
         log('info',`app started at port ${port}`);

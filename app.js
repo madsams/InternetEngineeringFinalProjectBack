@@ -17,10 +17,16 @@ app.use(express.json());
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin","*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+app.use(function(req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader("Access-Control-Allow-Methods","GET,HEAD,OPTIONS,POST,PUT,DELETE");
+  res.setHeader("Access-Control-Allow-Headers",
+  "Origin,Cache-Control,Accept,X-Access-Token ,X-Requested-With, Content-Type, Authorization, Access-Control-Request-Method"
+  );
+  if (req.method === "OPTIONS") {
+      return res.status(200).end();
+  }
   next();
 });
 
@@ -56,6 +62,8 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
+
+
 
 const secured = (req, res, next) => {
   req.user = myUser;

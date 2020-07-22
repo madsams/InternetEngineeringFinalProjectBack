@@ -113,8 +113,8 @@ let getFormAnswers = async (id , filter)=>{
                 };
                 delete result.answersCount;
                 sortJsonArray(result.records , 'createdAt' , 'des');
-                log('info' , JSON.stringify(result));
                 result.records = filteredBy(result , filter);
+                log('info' , JSON.stringify(result));
                 resolve({body: result , status: 200});
             }
             else{

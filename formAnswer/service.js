@@ -2,6 +2,7 @@ const data = require('./data');
 const log = require('./../logger/logger');
 const formData = require('./../form/data');
 const {getCoveredAreas} = require('./../area/service');
+const Form = require('./../form/model');
 
 let findAllAnswers = async ()=>{
     let promise = new Promise((resolve , reject)=>{

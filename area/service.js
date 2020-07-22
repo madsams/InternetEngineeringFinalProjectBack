@@ -58,7 +58,7 @@ let getCoveredAreas = async (point) =>{
                     try{
                         area.geometry.coordinates.forEach((coordinates)=>{
                             if(Point.isInsidePolygon(point, coordinates) === true){
-                                result.push(res.name);
+                                result.push({name:res.name , id:res.id});
                                 throw BreakException;
                             }
                         });

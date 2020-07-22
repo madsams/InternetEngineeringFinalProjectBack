@@ -70,7 +70,7 @@ const secured = (req, res, next) => {
     return next();
   }
   req.session.returnTo = req.originalUrl;
-  res.redirect("/login");
+  res.status(403).json({message: 'unauthorized'});
 };
 
 app.use((req, res, next) => {

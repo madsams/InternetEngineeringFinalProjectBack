@@ -13,7 +13,8 @@ router.get(
     scope: "openid email profile"
   }),
   (req, res) => {
-    res.redirect("/");
+    let returnTo = req.query.returnTo;
+    res.redirect(returnTo || "/");
   }
 );
 

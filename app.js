@@ -69,7 +69,6 @@ app.use(function(req, res, next) {
 });
 
 const secured = (req, res, next) => {
-  req.user = myUser;
   if (req.user) {
     return next();
   }

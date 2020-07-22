@@ -8,7 +8,6 @@ const mongoose = require('mongoose');
 const expressSession = require('express-session');
 const passport = require('passport');
 const Auth0Strategy = require('passport-auth0');
-
 const port = process.env.PORT || 8000;
 const app = express();
 
@@ -88,6 +87,9 @@ const auth_api = require('./authentication/auth');
 app.use("/", auth_api);
 
 app.use(secured);
+
+const user = require('./user/routes');
+app.use("/api/users" , user);
 
 const forms_api = require('./form/api');
 app.use("/api/forms" , forms_api);

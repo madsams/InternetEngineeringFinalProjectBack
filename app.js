@@ -82,7 +82,7 @@ app.use((req, res, next) => {
 const auth_api = require('./authentication/auth');
 app.use("/", auth_api);
 
-app.use(secured);
+// app.use(secured);
 
 const user = require('./user/routes');
 app.use("/api/users" , user);

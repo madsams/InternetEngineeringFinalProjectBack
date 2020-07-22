@@ -3,6 +3,7 @@ const log = require('./../logger/logger');
 const sortJsonArray = require('sort-json-array');
 const { getCoveredAreas } = require('../area/service');
 const FormAnswer = require('./../formAnswer/model');
+const filteredBy = require('./filter');
 
 let getForms = async () =>{
     let promise = new Promise((resolve , reject)=>{
@@ -77,18 +78,15 @@ let createForm = async (formJson)=>{
     return await promise;
 }
 
-let getFormAnswers = async (id)=>{
+let getFormAnswers = async (id , filter)=>{
     let promise = new Promise((resolve , reject)=>{
-        data.formAnswers(id).then(async (form)=>{
+        data.formAnswers(id , filter).then(async (form)=>{
             if(form){
                 let result = form.toJSON();
                 result.records = result.records.map(answer=>{
-                    // let values = answer.values;
-                    // delete answer.values;
                     delete answer.fromId;
                     answer.answerId = answer.id;
                     delete answer.id;
-                    // answer = {...answer , ...values};
                     return answer; 
                 });
                 result.sum ={};
@@ -115,6 +113,7 @@ let getFormAnswers = async (id)=>{
                 };
                 delete result.answersCount;
                 sortJsonArray(result.records , 'createdAt' , 'des');
+                result.records = filteredBy(result , filter);
                 log('info' , JSON.stringify(result));
                 resolve({body: result , status: 200});
             }

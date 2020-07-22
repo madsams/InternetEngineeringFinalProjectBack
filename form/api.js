@@ -42,7 +42,15 @@ router.post('/' , (req , res)=> {
 
 router.get('/:id/form-answers', (req , res)=>{
     const id = req.params.id;
-    let resultPromise = service.getFormAnswers(id);
+    let filter;
+    try{
+        if (req.query.filter)
+            filter = JSON.parse(req.query.filter);
+    }
+    catch(err){
+        return res.status(422).json({message:'filter is not json'});
+    }
+    let resultPromise = service.getFormAnswers(id , filter);
     resultPromise.then(result =>{
         return res.status(result.status).json(result.body);
     })

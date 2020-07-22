@@ -23,7 +23,6 @@ const formAnswerSchema = new Schema({
 {
   toJSON: {
     transform: function (doc, ret) {
-	  console.log(ret);
       ret.id = ret._id;
       delete ret._id;
       delete ret.__v;

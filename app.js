@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const expressSession = require('express-session');
 const passport = require('passport');
 const Auth0Strategy = require('passport-auth0');
+const {graphqlHTTP} = require('express-graphql');
+const schema = require('./graphql/schema');
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -51,6 +53,11 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user);
 });
+
+app.use('/graphql', graphqlHTTP({
+    schema,
+    graphiql:true
+}));
 
 app.use(function(req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");

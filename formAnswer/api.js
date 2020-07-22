@@ -46,7 +46,7 @@ router.get('/:id' , (req , res) => {
     const id = req.params.id;
     service.findAnswer(id)
     .then(answer=>{
-        return res.status(200).json(answer);
+        return res.status(answer.status).json(answer.body);
     })
     .catch(err=>{
         return res.status(err.status).json(err.body);

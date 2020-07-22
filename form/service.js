@@ -36,7 +36,7 @@ let getForm = async (id) =>{
             }
             else{
                 log('error', `not find form with id= ${id}`);
-                reject({body: {message:`not find form with id= ${id}`} , status:400});
+                reject({body: {message:`not find form with id= ${id}`} , status:404});
             }
         }).catch(err =>{
             log('error' , err);

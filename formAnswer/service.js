@@ -48,7 +48,7 @@ let findAnswer = async (id) =>{
             }
             else{
                 log('error', `not find answer with id= ${id}`);
-                reject({body: {message:`not find answer with id= ${id}`} , status: 400});
+                reject({body: {message:`not find answer with id= ${id}`} , status: 404});
             }
         })
         .catch(err =>{
@@ -65,7 +65,6 @@ let findFormAnswers = async (id) => {
         .then(result=>{
             if (result){
                 let answers = result.map(answer=>{
-                    console.log(answer);
                     return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title };
                 });
                 log('info' , JSON.stringify(answers));
@@ -73,7 +72,7 @@ let findFormAnswers = async (id) => {
             }
             else{
                 log('error' , `no form with id= ${id}`);
-                reject({body: {message: `no form with id= ${id}`} , status: 400});
+                reject({body: {message: `no form with id= ${id}`} , status: 404});
             } 
         })
         .catch(err=>{
@@ -92,8 +91,8 @@ let createFormAnswer = async (formAnswerJson) =>{
             resolve({body: {formAnswerId:result.toJSON().id} , status: 200});
         })
         .catch(err => {
-            log('error' , err);
-            reject({body: {message:err} , status: 422});
+            log('error' , err.body.message);
+            reject(err);
         });
     });
     return await promise;

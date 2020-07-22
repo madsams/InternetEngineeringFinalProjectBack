@@ -35,7 +35,6 @@ router.post('/:id' , (req , res)=> {
     // answer['userId'] = req.user.id;
     const resultPromise = service.createFormAnswer(answer);
     resultPromise.then(result => {
-        console.log('here');
         return res.status(result.status).json(result.body);
     })
     .catch(err => {

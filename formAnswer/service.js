@@ -1,7 +1,8 @@
 const data = require('./data');
 const log = require('./../logger/logger');
 const Form = require('./../form/model');
-
+const {getCoveredAreas} = require('./../area/service');
+const point = require('../geometry/point');
 let findAllAnswers = async ()=>{
     let promise = new Promise((resolve , reject)=>{
         data.findAllAnswers()
@@ -30,17 +31,26 @@ let findAllAnswers = async ()=>{
 let findAnswer = async (id) =>{
     let promise = new Promise((resolve , reject)=>{
         data.findAnswer(id)
-        .then(answer=>{
+        .then(async (answer)=>{
             if(answer){
                 let form = {...answer.formId.toJSON()};
                 form.formId = form.id;
                 delete form.id;
                 delete form.records;
                 delete form.answersCount;
-                form.fields = form.fields.map(field=>{
-                    field['value'] = answer.values[field.name];
+                form.fields = await Promise.all(form.fields.map(async (field) =>{
+                    if (field.type !== 'Location'){
+                        field['value'] = answer.values[field.name];
+                        return field;
+                    }
+                    let point = [parseFloat(answer.values[field.name].lng) , parseFloat(answer.values[field.name].lat)];
+                    let res = await getCoveredAreas(point);
+                    if (res.status == 200 && res.body.length > 0)
+                        field['value'] = res.body;
+                    else
+                        field['value'] = answer.values[field.name];
                     return field;
-                });
+                }));
                 answer = answer.toJSON();
                 delete answer.values;
                 delete answer.formId;
@@ -62,18 +72,41 @@ let findAnswer = async (id) =>{
     return await promise;
 }
 
+let notMatchType = (value , type)=>{
+    if (type === 'Number'){
+        if(isNaN(value))
+            return false;
+        return true;
+    }
+    else if (type === 'Text'){
+        return typeof value === 'string' || value instanceof String;
+    }
+    else if (type === 'Location'){
+        return !isNaN(value.lng) && !isNaN(value.lat) && Object.keys(value).length === 2;
+    }
+    else{
+        return true; //todo: set a format for Date
+    }
+}
+
 let createFormAnswer = async (formAnswerJson) =>{
     let promise = new Promise((resolve , reject)=>{
         data.createFormAnswer(formAnswerJson)
         .then(result=>{
             Form.findById(formAnswerJson.formId).then(form=>{
                 if (form){
-                    
                     let ok = true;
                     form.fields.forEach(field => {
                         if (field.required && !formAnswerJson.values[field.name]){
                             ok = false;
+                            log('error' , 'form answer is not complete')
                             reject({status:422 , body: {message:"form answer is not complete"}});
+                            return;
+                        }
+                        if (formAnswerJson.values[field.name] && notMatchType(formAnswerJson.values[field.name] , field.type) === false){
+                            ok = false;
+                            log('error' , 'wrong type of value')
+                            reject({status:422 , body: {message:"wrong type of value"}});
                             return;
                         }
                     });
@@ -85,14 +118,17 @@ let createFormAnswer = async (formAnswerJson) =>{
                             resolve({body: {formAnswerId:result.toJSON().id} , status: 200});
                         })
                         .catch(err=>{
+                            log('error' , err);
                             reject(({body:{message:err} ,status:500}));
                         });
                     }
                 }
                 else{
+                    log('error' , `not find form with id = ${formAnswerJson.formId}`);
                     reject({status:404 , body:{message:`not find form with id = ${formAnswerJson.formId}`}});
                 }
             }).catch(err =>{
+                log('error' , err);
                 reject({status:422 , body:{message:err}});
             });
         })

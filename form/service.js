@@ -2,7 +2,8 @@ const data = require('./data');
 const log = require('./../logger/logger');
 const sortJsonArray = require('sort-json-array');
 const { getCoveredAreas } = require('../area/service');
-
+const FormAnswer = require('./../formAnswer/model');
+const filteredBy = require('./filter');
 
 let getForms = async () =>{
     let promise = new Promise((resolve , reject)=>{
@@ -62,39 +63,30 @@ let getForm = async (id) =>{
 
 let createForm = async (formJson)=>{
     let promise = new Promise((resolve , reject)=>{
-        if (formJson.fields && formJson.fields.length > 0){
-            data.createForm(formJson).then(form=>{
-                let result = form.toJSON();
-                log('info' , JSON.stringify(result));
-                delete result.fields;
-                delete result.records;
-                resolve({body: result , status:200});
-            })
-            .catch(err=>{
-                log('error' , err);
-                reject({body: {message:err} , status:422});
-            });
-        }
-        else{
-            log('error' , 'Path `fields` is required.');
-            reject({body: {message:'Path `fields` is required.'}, status:422});
-        }
+        data.createForm(formJson).then(form=>{
+            let result = form.toJSON();
+            log('info' , JSON.stringify(result));
+            delete result.fields;
+            delete result.records;
+            resolve({body: result , status:200});
+        })
+        .catch(err=>{
+            log('error' , err);
+            reject({body: {message:err} , status:422});
+        });
     });
     return await promise;
 }
 
-let getFormAnswers = async (id)=>{
+let getFormAnswers = async (id , filter)=>{
     let promise = new Promise((resolve , reject)=>{
-        data.formAnswers(id).then(async (form)=>{
+        data.formAnswers(id , filter).then(async (form)=>{
             if(form){
                 let result = form.toJSON();
                 result.records = result.records.map(answer=>{
-                    // let values = answer.values;
-                    // delete answer.values;
                     delete answer.fromId;
                     answer.answerId = answer.id;
                     delete answer.id;
-                    // answer = {...answer , ...values};
                     return answer; 
                 });
                 result.sum ={};
@@ -121,6 +113,7 @@ let getFormAnswers = async (id)=>{
                 };
                 delete result.answersCount;
                 sortJsonArray(result.records , 'createdAt' , 'des');
+                result.records = filteredBy(result , filter);
                 log('info' , JSON.stringify(result));
                 resolve({body: result , status: 200});
             }
@@ -137,4 +130,38 @@ let getFormAnswers = async (id)=>{
     return await promise;
 }
 
-module.exports = {getForms , getForm , createForm , getFormAnswers};
+let deleteForm = async (id) =>{
+    let promise = new Promise((resolve , reject)=>{
+        data.deleteForm(id).then(result=>{
+            if(result.deletedCount > 0){
+                FormAnswer.deleteMany(
+                    {
+                      fromId: {
+                        $in: [
+                          `${id}`
+                        ]
+                      }
+                    },
+                    function(err, result) {
+                      if (err) {
+                        console.log(err)
+                      } else {
+                        console.log(result);
+                      }
+                    }
+                  );
+                resolve({body:'delete...' , status:200});
+            }
+            else{
+                reject({body: {message: `no form with id= ${id}`} , status: 404});
+            }
+        })
+        .catch(err=>{
+            log('error' , err);
+            reject({body: {message:err}, status:400});
+        });
+    });
+    return await promise;
+}
+
+module.exports = {getForms , getForm , createForm , getFormAnswers , deleteForm};

@@ -1,15 +1,15 @@
 const data = require('./data');
 const log = require('./../logger/logger');
-const Form = require('./../form/model');
+const formData = require('./../form/data');
 const {getCoveredAreas} = require('./../area/service');
-const point = require('../geometry/point');
+const Form = require('./../form/model');
+
 let findAllAnswers = async ()=>{
     let promise = new Promise((resolve , reject)=>{
         data.findAllAnswers()
         .then(result=>{
             if(result){
                 let answers = result.map(answer=>{
-                    console.log(answer);
                     return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title };
                 });
                 log('info' , JSON.stringify(answers));
@@ -39,7 +39,7 @@ let findAnswer = async (id) =>{
                 delete form.records;
                 delete form.answersCount;
                 form.fields = await Promise.all(form.fields.map(async (field) =>{
-                    if (field.type !== 'Location'){
+                    if (field.type !== 'Location' || !answer.values[field.name] || field.options){
                         field['value'] = answer.values[field.name];
                         return field;
                     }
@@ -91,26 +91,26 @@ let notMatchType = (value , type)=>{
 
 let createFormAnswer = async (formAnswerJson) =>{
     let promise = new Promise((resolve , reject)=>{
-        data.createFormAnswer(formAnswerJson)
-        .then(result=>{
-            Form.findById(formAnswerJson.formId).then(form=>{
-                if (form){
-                    let ok = true;
-                    form.fields.forEach(field => {
-                        if (field.required && !formAnswerJson.values[field.name]){
-                            ok = false;
-                            log('error' , 'form answer is not complete')
-                            reject({status:422 , body: {message:"form answer is not complete"}});
-                            return;
-                        }
-                        if (formAnswerJson.values[field.name] && notMatchType(formAnswerJson.values[field.name] , field.type) === false){
-                            ok = false;
-                            log('error' , 'wrong type of value')
-                            reject({status:422 , body: {message:"wrong type of value"}});
-                            return;
-                        }
-                    });
-                    if (ok === true){
+        Form.findById(formAnswerJson.formId).then(form=>{
+            if (form){
+                let ok = true;
+                form.fields.forEach(field => {
+                    if (field.required && !formAnswerJson.values[field.name]){
+                        ok = false;
+                        log('error' , 'form answer is not complete')
+                        reject({status:422 , body: {message:"form answer is not complete"}});
+                        return;
+                    }
+                    if (formAnswerJson.values[field.name] && notMatchType(formAnswerJson.values[field.name] , field.type) === false){
+                        ok = false;
+                        log('error' , 'wrong type of value')
+                        reject({status:422 , body: {message:"wrong type of value"}});
+                        return;
+                    }
+                });
+                if (ok === true){
+                    data.createFormAnswer(formAnswerJson)
+                    .then(result=>{
                         form.records.push(result._id);
                         form.save().then(()=>{
                             log('info' , JSON.stringify(result.toJSON()));
@@ -120,23 +120,43 @@ let createFormAnswer = async (formAnswerJson) =>{
                             log('error' , err);
                             reject(({body:{message:err} ,status:500}));
                         });
-                    }
+                    })
+                    .catch(err => {
+                        log('error' , err.body.message);
+                        reject({status:500 , body:{message: err}});
+                    });
                 }
-                else{
-                    log('error' , `not find form with id = ${formAnswerJson.formId}`);
-                    reject({status:404 , body:{message:`not find form with id = ${formAnswerJson.formId}`}});
-                }
-            }).catch(err =>{
-                log('error' , err);
-                reject({status:422 , body:{message:err}});
-            });
+            }
+            else{
+                log('error' , `not find form with id = ${formAnswerJson.formId}`);
+                reject({status:404 , body:{message:`not find form with id = ${formAnswerJson.formId}`}});
+            }
+        }).catch(err =>{
+            log('error' , err);
+            reject({status:422 , body:{message:err}});
+        });
+        
+    });
+    return await promise;
+}
+
+let deleteFormAnswer = async (id) =>{
+    let promise = new Promise((resolve , reject)=>{
+        data.deleteFormAnswer(id).then(result=>{
+            formData.update(result.formId , result._id);
+            if(result){
+                resolve({body:'delete...' , status:200});
+            }
+            else{
+                reject({body: {message: `no form answer with id= ${id}`} , status: 404});
+            }
         })
-        .catch(err => {
-            log('error' , err.body.message);
-            reject({status:500 , body:{message: err}});
+        .catch(err=>{
+            log('error' , err);
+            reject({body: {message:err}, status:400});
         });
     });
     return await promise;
 }
 
-module.exports = {findAllAnswers , findAnswer , createFormAnswer};
+module.exports = {findAllAnswers , findAnswer , createFormAnswer , deleteFormAnswer};

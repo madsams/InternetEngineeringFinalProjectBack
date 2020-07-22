@@ -111,7 +111,6 @@ let createFormAnswer = async (formAnswerJson) =>{
                         }
                     });
                     if (ok === true){
-                        form.answersCount++;
                         form.records.push(result._id);
                         form.save().then(()=>{
                             log('info' , JSON.stringify(result.toJSON()));

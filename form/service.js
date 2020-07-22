@@ -113,14 +113,12 @@ let getFormAnswers = async (id)=>{
                                 return answer;
                             let point = [parseFloat(answer.values[field.name].lng) , parseFloat(answer.values[field.name].lat)];
                             let res = await getCoveredAreas(point);
-                            console.log(res);
                             if (res.status == 200 && res.body.length > 0)
                                 answer.values[field.name] = res.body;
                             return answer;
                         }));
                     }
                 };
-                delete result.fields;
                 delete result.answersCount;
                 sortJsonArray(result.records , 'createdAt' , 'des');
                 log('info' , JSON.stringify(result));

@@ -55,10 +55,6 @@ const formSchema = new Schema({
     ],
     required: true
   },
-  answersCount: {
-    type:Number,
-    required:true
-  },
   records:[{
     type: Schema.Types.ObjectId,
     ref: 'FormAnswer'
@@ -70,6 +66,10 @@ const formSchema = new Schema({
       ret.id = ret._id;
       delete ret._id;
       delete ret.__v;
+      if (ret.records)
+        ret.answersCount = ret.records.length;
+      else
+        ret.answersCount = 0;
       ret.fields = ret.fields.map(field => {
           delete field._id;
           if (field.options.length  === 0){

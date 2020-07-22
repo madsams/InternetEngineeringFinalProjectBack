@@ -66,7 +66,6 @@ passport.deserializeUser((user, done) => {
 
 
 const secured = (req, res, next) => {
-  req.user = myUser;
   if (req.user) {
     return next();
   }

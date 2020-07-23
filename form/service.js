@@ -74,7 +74,7 @@ let getFormAnswers = async (id , filter)=>{
             if(form){
                 let result = form.toJSON();
                 result.records = result.records.map(answer=>{
-                    delete answer.fromId;
+                    delete answer.formId;
                     answer.answerId = answer.id;
                     delete answer.id;
                     return answer; 

@@ -20,6 +20,7 @@
   "homepage": "https://gitlab.com/m.mahdi2414/express-final-project#readme",
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.10.0",
+    "axios": "latest",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
@@ -35,6 +36,7 @@
     "geojson-validation": "^1.0.2",
     "jwks-rsa": "^1.8.1",
     "mocha": "^8.0.1",
+    "moment": "^2.27.0",
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.24",
     "passport": "^0.4.1",
@@ -43,8 +45,7 @@
     "point-in-polygon": "^1.0.1",
     "sinon": "^9.0.2",
     "sort-json-array": "^0.1.7",
-    "winston": "^3.3.3",
-    "axios": "latest"
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.6",

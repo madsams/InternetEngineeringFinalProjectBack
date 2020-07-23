@@ -32,7 +32,7 @@ router.post('/:id' , (req , res)=> {
     answer['values'] = {...answer};
     answer['formId'] = id;
     answer['createdAt'] = new Date();
-    // answer['userId'] = req.user.id;
+    answer['userId'] = req.user.sub;
     const resultPromise = service.createFormAnswer(answer);
     resultPromise.then(result => {
         return res.status(result.status).json(result.body);

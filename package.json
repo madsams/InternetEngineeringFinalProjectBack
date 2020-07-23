@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "devStart": "nodemon app.js",
     "test": "mocha --timeout 10000"
   },
   "repository": {
@@ -20,9 +21,11 @@
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.10.0",
     "auth0-js": "^9.13.4",
+    "axios": "latest",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
@@ -34,6 +37,7 @@
     "geojson-validation": "^1.0.2",
     "jwks-rsa": "^1.8.1",
     "mocha": "^8.0.1",
+    "moment": "^2.27.0",
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.24",
     "passport": "^0.4.1",
@@ -55,6 +59,7 @@
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-import": "^2.22.0",
     "jest": "^26.0.1",
+    "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "prettierrc": "^0.0.0-5",
     "regenerator-runtime": "^0.13.5",

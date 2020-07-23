@@ -39,7 +39,7 @@ let filteredBy = (form , filter)=>{
                         continue;
                 }
                 else{
-                    if (!answer.values[field.name].lng){
+                    if (!answer.values[field.name].lng ||  filter[field.name].length == 0){
                         let ok = filter[field.name].length == 0;
                         for(const area of filter[field.name].value){
                             for (const loc of answer.values[field.name]){

@@ -5,7 +5,7 @@ let forms = async ()=>{
 }
 
 let form = async (id) =>{
-    return await Form.findById(id).populate('records');
+    return await Form.findById(id);
 }
 
 let createForm = async (formJson)=>{

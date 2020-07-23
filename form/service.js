@@ -35,16 +35,6 @@ let getForm = async (id) =>{
         data.form(id).then(form=>{
             if (form){
                 let result = form.toJSON();
-                result.sum ={};
-                result.fields.forEach(field => {
-                    if (field.type === 'Number'){
-                        result.sum[field.name] = 0;
-                        result.records.forEach(answer => {
-                            if (answer.values[field.name])
-                                result.sum[field.name] += parseInt(answer.values[field.name]);
-                        });
-                    }
-                });
                 delete result.records;
                 log('info' , JSON.stringify(result));
                 resolve({body: result , status:200});
@@ -84,21 +74,13 @@ let getFormAnswers = async (id , filter)=>{
             if(form){
                 let result = form.toJSON();
                 result.records = result.records.map(answer=>{
-                    delete answer.fromId;
+                    delete answer.formId;
                     answer.answerId = answer.id;
                     delete answer.id;
                     return answer; 
                 });
-                result.sum ={};
                 for(const field of result.fields) {
-                    if (field.type === 'Number'){
-                        result.sum[field.name] = 0;
-                        result.records.forEach(answer => {
-                            if (answer.values[field.name])
-                                result.sum[field.name] += parseInt(answer.values[field.name]);
-                        });
-                    }
-                    else if(field.type === 'Location'){
+                    if(field.type === 'Location'){
                         result.records = await Promise.all(result.records.map(async answer=>{
                             let value = answer.values[field.name];
                             if (!value)
@@ -112,8 +94,18 @@ let getFormAnswers = async (id , filter)=>{
                     }
                 };
                 delete result.answersCount;
-                sortJsonArray(result.records , 'createdAt' , 'des');
                 result.records = filteredBy(result , filter);
+                result.sum ={};
+                for(const field of result.fields) {
+                    if (field.type === 'Number'){
+                        result.sum[field.name] = 0;
+                        result.records.forEach(answer => {
+                            if (answer.values[field.name])
+                                result.sum[field.name] += parseInt(answer.values[field.name]);
+                        });
+                    }
+                }
+                sortJsonArray(result.records , 'createdAt' , 'des');
                 log('info' , JSON.stringify(result));
                 resolve({body: result , status: 200});
             }

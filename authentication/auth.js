@@ -32,14 +32,13 @@ router.get(
   "/login",
   passport.authenticate("auth0", {
     scope: "openid email profile"
-  }),
-  (req, res) => {
-    res.redirect("/");
-  }
+  })
 );
 
 router.get("/callback", (req, res, next) => {
-  passport.authenticate("auth0", (err, user, info) => {
+  passport.authenticate("auth0", {
+    scope: "openid email profile"
+  }, (err, user, info) => {
     if (err) {
       return next(err);
     }

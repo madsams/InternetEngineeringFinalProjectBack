@@ -17,14 +17,10 @@ let apiManagementHeaders = {
 };
 
 router.get('/roles', (req, res) => {
-  let userId = req.user.sub.split('|')[1];
-  let url = `https://ieng-final-project.eu.auth0.com/api/v2/users/${userId}/roles`;
+  let url = `https://ieng-final-project.eu.auth0.com/api/v2/users/${req.user.sub}/roles`;
   axios.get(url, apiManagementHeaders).then((result) => {
-    console.log(result);
     return res.status(200).json(result.data);
   }).catch((err) => {
-    console.log(err);
-    console.log(url);
     res.status(400).json(err);
   });
 });

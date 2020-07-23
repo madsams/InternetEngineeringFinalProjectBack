@@ -1,7 +1,10 @@
 const FormAnswer = require('./model');
 
-let findAllAnswers = async ()=> {
-    return await FormAnswer.find().sort({createdAt: -1}).populate('formId');
+let findAllAnswers = async (userId)=> {
+    if (userId)
+        return await FormAnswer.find({userId}).sort({createdAt: -1}).populate('formId');
+    else 
+        return await FormAnswer.find().sort({createdAt: -1}).populate('formId');
 }
 
 let findAnswer = async (id)=> {

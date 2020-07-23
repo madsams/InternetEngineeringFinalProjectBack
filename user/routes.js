@@ -4,8 +4,9 @@ const jwtAuthz = require("express-jwt-authz");
 const getRoles = require('./roles');
 const log = require('../logger/logger');
 var defaultRoles = require("./defaultRoles");
+const service = require('./../formAnswer/service');
 
-router = express.Router();
+const router = express.Router();
 AUTH0_MGMT_API_ACCESS_TOKEN = process.env.AUTH0_MGMT_API_ACCESS_TOKEN;
 
 const roles = defaultRoles;
@@ -25,6 +26,15 @@ router.get('/roles', (req, res) => {
     res.status(400).json(err);
   });
 });
+
+router.get('/form-answers', (req , res)=>{
+	service.findAllAnswers(req.user.sub).then(result=>{
+		return res.status(result.status).json(result.body);
+	}).catch(err=>{
+		return res.status(err.status).json(err.body);
+	});
+})
+
 
 
 module.exports = router;

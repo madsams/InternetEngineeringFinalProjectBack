@@ -4,13 +4,16 @@ const formData = require('./../form/data');
 const {getCoveredAreas} = require('./../area/service');
 const Form = require('./../form/model');
 
-let findAllAnswers = async ()=>{
+let findAllAnswers = async (userId)=>{
     let promise = new Promise((resolve , reject)=>{
-        data.findAllAnswers()
+        data.findAllAnswers(userId)
         .then(result=>{
             if(result){
                 let answers = result.map(answer=>{
-                    return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title };
+                    if (userId)
+                        return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title};
+                    else
+                        return {id:answer._id , formId: answer.formId._id , createdAt: answer.createdAt , title: answer.formId.title  , userId: answer.userId};
                 });
                 log('info' , JSON.stringify(answers));
                 resolve({body: answers , status: 200});
@@ -54,7 +57,7 @@ let findAnswer = async (id) =>{
                 answer = answer.toJSON();
                 delete answer.values;
                 delete answer.formId;
-                delete answer.userId;
+                // delete answer.userId;
                 answer = {...answer , ...form};
                 log('info' , JSON.stringify(answer));
                 resolve({body: answer ,status:200});

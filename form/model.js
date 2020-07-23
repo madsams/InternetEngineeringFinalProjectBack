@@ -2,6 +2,10 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+function arrayLimit(val) {
+    return val && val.length > 0;
+}
+
 const formSchema = new Schema({
   title: {
     type: String,
@@ -53,7 +57,8 @@ const formSchema = new Schema({
         }
       }
     ],
-    required: true
+    required: true,
+    validate: [arrayLimit, 'fields is required']
   },
   records:[{
     type: Schema.Types.ObjectId,

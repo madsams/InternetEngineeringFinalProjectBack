@@ -9,11 +9,23 @@ var querystring = require('querystring');
 
 dotenv.config();
 
+
+var webAuth = new auth0.WebAuth({
+    domain:       'ieng-final-project.eu.auth0.com',
+    clientID:     process.env.AUTH0_CLIENT_ID
+  });
+
+
+
 // Perform the login, after login Auth0 will redirect to callback
 router.get('/login', passport.authenticate('auth0', {
   scope: 'openid email profile'
 }), function (req, res) {
   res.redirect('/');
+});
+
+router.get('/v2/login', (req, res, next) => {
+  webAuth.authorize({});
 });
 
 // Perform the final stage of authentication and redirect to previously requested URL or '/user'

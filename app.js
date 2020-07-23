@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const expressSession = require('express-session');
 const passport = require('passport');
 const Auth0Strategy = require('passport-auth0');
-
+const jsonwebtoken = require('jsonwebtoken');
 const port = process.env.PORT || 8000;
 const app = express();
 
@@ -37,7 +37,15 @@ const strategy = new Auth0Strategy(
       process.env.AUTH0_CALLBACK_URL || "http://localhost:3000/callback"
   },
   function(accessToken, refreshToken, extraParams, profile, done) {
-    return done(null, profile);
+    var decoded = jsonwebtoken.decode(accessToken);
+    // profile.permissions = decoded.permissions;
+    // log('****************');
+    // console.log(accessToken);
+    // console.log(decoded);
+    // console.log(extraParams);
+    // console.log(profile);
+    // log('****************');
+    return done(null, {profile, accessToken, extraParams});
   }
 );
 passport.use(strategy);
@@ -70,7 +78,7 @@ app.use(function(req, res, next) {
 });
 
 const secured = (req, res, next) => {
-  req.user = myUser;
+  // req.user = myUser;
   if (req.user) {
     return next();
   }
@@ -78,16 +86,14 @@ const secured = (req, res, next) => {
   res.redirect("/login");
 };
 
-app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.isAuthenticated();
-  next();
-});
-
 
 const auth_api = require('./authentication/auth');
 app.use("/", auth_api);
 
 // app.use(secured);
+
+const user = require('./user/routes');
+app.use("/api/users" , user);
 
 const forms_api = require('./form/api');
 app.use("/api/forms" , forms_api);
@@ -106,7 +112,7 @@ app.use(function(req, res) {
 
 const connectionString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS}@cluster0.rbxbu.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 mongoose
-  .connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false  })
   .then(() => {
     app.listen(port , function(){
         log('info',`app started at port ${port}`);

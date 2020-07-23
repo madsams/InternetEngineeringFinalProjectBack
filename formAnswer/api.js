@@ -10,7 +10,7 @@ const errorFormatter = ({ location, msg, param}) => {
 
 router.use(function(req, res, next) {
     log('info' , `new ${req.method} request on ${req.originalUrl}`);
-    if(req.method.toString() !== "POST" && req.method.toString() !== "GET"){     
+    if(req.method.toString() !== "POST" && req.method.toString() !== "GET" && req.method.toString() !== "DELETE"){     
         log('error' , `${req.method} is not correct for ${req.originalUrl}`);
         return res.status(400).json({message: "Bad Request (request method error)"});
     }
@@ -52,6 +52,18 @@ router.get('/:id' , (req , res) => {
         return res.status(err.status).json(err.body);
     })
 });
+
+
+// router.delete('/:id' , (req , res) => {
+//     const id = req.params.id;
+//     service.deleteFormAnswer(id)
+//     .then(answer=>{
+//         return res.status(answer.status).json(answer.body);
+//     })
+//     .catch(err=>{
+//         return res.status(err.status).json(err.body);
+//     })
+// });
 
 
 module.exports = router;

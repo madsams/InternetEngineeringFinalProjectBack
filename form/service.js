@@ -35,16 +35,6 @@ let getForm = async (id) =>{
         data.form(id).then(form=>{
             if (form){
                 let result = form.toJSON();
-                result.sum ={};
-                result.fields.forEach(field => {
-                    if (field.type === 'Number'){
-                        result.sum[field.name] = 0;
-                        result.records.forEach(answer => {
-                            if (answer.values[field.name])
-                                result.sum[field.name] += parseInt(answer.values[field.name]);
-                        });
-                    }
-                });
                 delete result.records;
                 log('info' , JSON.stringify(result));
                 resolve({body: result , status:200});

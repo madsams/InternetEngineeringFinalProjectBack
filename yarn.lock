@@ -2723,17 +2723,15 @@ cross-spawn@^7.0.0:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-<<<<<<< HEAD
 crypto-js@^3.2.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
   integrity sha512-DIT51nX0dCfKltpRiXV+/TVZq+Qq2NgF4644+K7Ttnla7zEzqc+kjJyiB96BHNyUTBxyjzRcZYpUdZa+QAqi6Q==
-=======
+
 crypto-random-string@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
   integrity sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==
->>>>>>> development
 
 cssom@^0.4.4:
   version "0.4.4"
@@ -4135,7 +4133,6 @@ iconv-lite@0.4.24, iconv-lite@^0.4.24:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-<<<<<<< HEAD
 idtoken-verifier@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/idtoken-verifier/-/idtoken-verifier-2.0.3.tgz#b60a933848900c9f684e6296332f62e5f2e79360"
@@ -4147,12 +4144,11 @@ idtoken-verifier@^2.0.3:
     jsbn "^1.1.0"
     unfetch "^4.1.0"
     url-join "^4.0.1"
-=======
+
 ignore-by-default@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ignore-by-default/-/ignore-by-default-1.0.1.tgz#48ca6d72f6c6a3af00a9ad4ae6876be3889e2b09"
   integrity sha1-SMptcvbGo68Aqa1K5odr44ieKwk=
->>>>>>> development
 
 ignore@^4.0.6:
   version "4.0.6"
@@ -7854,19 +7850,17 @@ urix@^0.1.0:
   resolved "https://registry.yarnpkg.com/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
   integrity sha1-2pN/emLiH+wf0Y1Js1wpNQZ6bHI=
 
-<<<<<<< HEAD
 url-join@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/url-join/-/url-join-4.0.1.tgz#b642e21a2646808ffa178c4c5fda39844e12cde7"
   integrity sha512-jk1+QP6ZJqyOiuEI9AEWQfju/nB2Pw466kbA0LEZljHwKeMgd9WrAEgEGxjPDD2+TNbbb37rTyhEfrCXfuKXnA==
-=======
+
 url-parse-lax@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/url-parse-lax/-/url-parse-lax-3.0.0.tgz#16b5cafc07dbe3676c1b1999177823d6503acb0c"
   integrity sha1-FrXK/Afb42dsGxmZF3gj1lA6yww=
   dependencies:
     prepend-http "^2.0.0"
->>>>>>> development
 
 use@^3.1.0:
   version "3.1.1"
@@ -8019,19 +8013,17 @@ wide-align@1.1.3:
   dependencies:
     string-width "^1.0.2 || 2"
 
-<<<<<<< HEAD
-winchan@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/winchan/-/winchan-0.2.2.tgz#6766917b88e5e1cb75f455ffc7cc13f51e5c834e"
-  integrity sha512-pvN+IFAbRP74n/6mc6phNyCH8oVkzXsto4KCHPJ2AScniAnA1AmeLI03I2BzjePpaClGSI4GUMowzsD3qz5PRQ==
-=======
 widest-line@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/widest-line/-/widest-line-3.1.0.tgz#8292333bbf66cb45ff0de1603b136b7ae1496eca"
   integrity sha512-NsmoXalsWVDMGupxZ5R08ka9flZjjiLvHVAWYOKtiKM8ujtZWr9cRffak+uSE48+Ob8ObalXpwyeUiyDD6QFgg==
   dependencies:
     string-width "^4.0.0"
->>>>>>> development
+
+winchan@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/winchan/-/winchan-0.2.2.tgz#6766917b88e5e1cb75f455ffc7cc13f51e5c834e"
+  integrity sha512-pvN+IFAbRP74n/6mc6phNyCH8oVkzXsto4KCHPJ2AScniAnA1AmeLI03I2BzjePpaClGSI4GUMowzsD3qz5PRQ==
 
 winston-transport@^4.4.0:
   version "4.4.0"

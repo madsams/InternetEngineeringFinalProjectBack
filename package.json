@@ -19,6 +19,7 @@
   "homepage": "https://gitlab.com/m.mahdi2414/express-final-project#readme",
   "dependencies": {
     "@auth0/auth0-spa-js": "^1.10.0",
+    "auth0-js": "^9.13.4",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",

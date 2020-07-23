@@ -4,8 +4,29 @@ const passport = require("passport");
 const util = require("util");
 const url = require("url");
 const querystring = require("querystring");
+const auth0 = require('auth0-js');
 
 require("dotenv").config();
+
+// var webAuth = new auth0.WebAuth({
+//     domain:       'ieng-final-project.eu.auth0.com',
+//     clientID:     process.env.AUTH0_CLIENT_ID
+//   });
+
+  var webAuth = new auth0.WebAuth({
+    domain:       'ieng-final-project.eu.auth0.com',
+    clientID:     'cnVc6ItQYtXKnqrx8VFtAxm2M06z2Ddg'
+  });
+
+
+
+router.get('/v2/login', (req, res, next) => {
+  // Trigger login with google
+  webAuth.authorize({
+    connection: 'google-oauth2'
+  });
+});
+
 
 router.get(
   "/login",

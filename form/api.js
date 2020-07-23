@@ -18,6 +18,7 @@ router.use(function(req, res, next) {
 });
 
 router.get('/' , (req , res)=> {
+    // console.log(req.user);
     let resultPromise = service.getForms();
     resultPromise.then(result =>{
         return res.status(result.status).json(result.body);

@@ -26,4 +26,22 @@ checkCache = (req, res, next) => {
   });
 };
 
-module.exports = {redis_client, checkCache};
+checkUserCache = (req, res, next) => {
+    const {id} = req.user.sub;
+
+    redis_client.get(id, (err, data) => {
+    if (err) {
+        log(err);
+        res.status(500).json(err);
+    }
+    //if no match found
+    if (data != null) {
+        log('Read from cache');
+        res.status(200).send(data);
+    } else {
+        next();
+    }
+  });
+};
+
+module.exports = {redis_client, checkCache, checkUserCache};

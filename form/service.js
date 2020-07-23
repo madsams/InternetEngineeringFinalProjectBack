@@ -79,7 +79,6 @@ let getFormAnswers = async (id , filter)=>{
                     delete answer.id;
                     return answer; 
                 });
-                result.sum ={};
                 for(const field of result.fields) {
                     if(field.type === 'Location'){
                         result.records = await Promise.all(result.records.map(async answer=>{

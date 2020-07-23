@@ -19,8 +19,8 @@ let filteredBy = (form , filter)=>{
                     if (parseInt(answer.values[field.name]) <= parseInt(filter[field.name].to) && parseInt(answer.values[field.name]) >= parseInt(filter[field.name].from))
                         continue;
                 }
-                else if (filter[field.name].length > 0 && field.type === 'Text'){
-                    let ok = false;
+                else if (field.type === 'Text'){
+                    let ok = filter[field.name].length == 0;
                     for(const pat of filter[field.name])
                     {
                         if (answer.values[field.name].includes(pat)){
@@ -38,9 +38,9 @@ let filteredBy = (form , filter)=>{
                     if (parseInt(date.getTime()) <= parseInt(to.getTime()) && parseInt(date.getTime()) >= parseInt(from.getTime()))
                         continue;
                 }
-                else if (filter[field.name].length > 0) {
+                else{
                     if (!answer.values[field.name].lng){
-                        let ok = false;
+                        let ok = filter[field.name].length == 0;
                         for(const area of filter[field.name].value){
                             for (const loc of answer.values[field.name]){
                                 if (loc.id === area){

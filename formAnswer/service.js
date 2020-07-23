@@ -3,6 +3,7 @@ const log = require('./../logger/logger');
 const formData = require('./../form/data');
 const {getCoveredAreas} = require('./../area/service');
 const Form = require('./../form/model');
+const notMatchType = require('./typeChecker');
 
 let findAllAnswers = async (userId)=>{
     let promise = new Promise((resolve , reject)=>{
@@ -73,23 +74,6 @@ let findAnswer = async (id) =>{
         });
     });
     return await promise;
-}
-
-let notMatchType = (value , type)=>{
-    if (type === 'Number'){
-        if(isNaN(value))
-            return false;
-        return true;
-    }
-    else if (type === 'Text'){
-        return typeof value === 'string' || value instanceof String;
-    }
-    else if (type === 'Location'){
-        return !isNaN(value.lng) && !isNaN(value.lat) && Object.keys(value).length === 2;
-    }
-    else{
-        return true; //todo: set a format for Date
-    }
 }
 
 let createFormAnswer = async (formAnswerJson) =>{

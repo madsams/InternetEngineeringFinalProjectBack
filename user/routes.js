@@ -17,6 +17,7 @@ let apiManagementHeaders = {
 };
 
 router.get('/roles', (req, res) => {
+  console.log('user', req.user);
   let url = `https://ieng-final-project.eu.auth0.com/api/v2/users/${req.user.sub}/roles`;
   axios.get(url, apiManagementHeaders).then((result) => {
     return res.status(200).json(result.data);

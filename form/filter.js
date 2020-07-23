@@ -8,7 +8,7 @@ let filteredBy = (form , filter)=>{
         result.push(answer);
         try{
             for(const field of form.fields){
-                if (!filter[field.name])
+                if (!filter[field.name] || filter[field.name].length === 0)
                     continue;
                 if (!answer.values[field.name])
                 {
@@ -20,7 +20,7 @@ let filteredBy = (form , filter)=>{
                         continue;
                 }
                 else if (field.type === 'Text'){
-                    let ok = filter[field.name].length == 0;
+                    let ok = false;
                     for(const pat of filter[field.name])
                     {
                         if (answer.values[field.name].includes(pat)){
@@ -39,8 +39,8 @@ let filteredBy = (form , filter)=>{
                         continue;
                 }
                 else{
-                    if (!answer.values[field.name].lng ||  filter[field.name].length == 0){
-                        let ok = filter[field.name].length == 0;
+                    if (!answer.values[field.name].lng){
+                        let ok = false;
                         for(const area of filter[field.name].value){
                             for (const loc of answer.values[field.name]){
                                 if (loc.id === area){

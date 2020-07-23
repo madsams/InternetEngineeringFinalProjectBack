@@ -11,34 +11,24 @@ router.get(
   "/login",
   passport.authenticate("auth0", {
     scope: "openid email profile"
-  }),
-  (req, res) => {
-    let returnTo = req.query.returnTo;
-    console.log('login');
-    console.log(returnTo);
-    res.redirect(returnTo || "/");
-  }
+  })
 );
 
 router.get("/callback", (req, res, next) => {
-  console.log('callback');
-  passport.authenticate("auth0", (err, user, info) => {
+  passport.authenticate("auth0", {
+    scope: "openid email profile"
+  }, (err, user, info) => {
     if (err) {
-      console.log('callback error');
       return next(err);
     }
     if (!user) {
-      console.log('call back redirect to login');
       return res.redirect("/login");
     }
     req.logIn(user, (err) => {
       if (err) {
-        console.log('error req.login');
         return next(err);
       }
       const returnTo = req.session.returnTo;
-      console.log('req.login redirect');
-      console.log(returnTo);
       delete req.session.returnTo;
       res.redirect(returnTo || "/");
     });

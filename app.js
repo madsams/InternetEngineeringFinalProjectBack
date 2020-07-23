@@ -3,108 +3,66 @@ const express = require('express');
 const body_parser = require('body-parser');
 const log = require('./logger/logger');
 const cors = require("cors");
-let path = require('path');
+const path = require('path');
 const mongoose = require('mongoose');
-const expressSession = require('express-session');
-const passport = require('passport');
-const Auth0Strategy = require('passport-auth0');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const port = process.env.PORT || 8000;
 const app = express();
+const jwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
 
-app.use(body_parser.json());
+const checkJwt = jwt({
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 60,
+    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`
+  }),
+
+  // Validate the audience and the issuer.
+  audience:  process.env.AUTH0_CLIENT_ID,
+  issuer: `https://${process.env.AUTH0_DOMAIN}/`,
+  algorithms: ['RS256']
+});
 
 app.use(express.json());
-
-app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin","*");
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,PATCH,DELETE");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  next();
-});
+app.use(cors());
+app.use(cookieParser(process.env.AUTH0_SESSION_SECRET));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
-const session = {
-  secret: process.env.AUTH0_SESSION_SECRET,
-  cookie: {},
-  resave: false,
-  saveUninitialized: false
-};
-
-app.use(expressSession(session));
-
-const strategy = new Auth0Strategy(
-  {
-    domain: process.env.AUTH0_DOMAIN,
-    clientID: process.env.AUTH0_CLIENT_ID,
-    clientSecret: process.env.AUTH0_CLIENT_SECRET,
-    callbackURL:
-      process.env.AUTH0_CALLBACK_URL || "http://localhost:3000/callback"
-  },
-  function(accessToken, refreshToken, extraParams, profile, done) {
-    return done(null, profile);
-  }
-);
-passport.use(strategy);
-app.use(passport.initialize());
-app.use(passport.session());
-
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
-
-const secured = (req, res, next) => {
-  req.user = myUser;
-  if (req.user) {
-    return next();
-  }
-  req.session.returnTo = req.originalUrl;
-  res.redirect("/login");
-};
-
-app.use((req, res, next) => {
-  res.locals.isAuthenticated = req.isAuthenticated();
-  next();
-});
-
-
-const auth_api = require('./authentication/auth');
-app.use("/", auth_api);
-
-app.use(secured);
+app.use(checkJwt);
 
 const user = require('./user/routes');
-app.use("/api/users" , user);
+app.use("/api/users", user);
 
 const forms_api = require('./form/api');
-app.use("/api/forms" , forms_api);
+app.use("/api/forms", forms_api);
 
 const form_answer = require('./formAnswer/api');
 app.use('/api/form-answers', form_answer);
 
 const areas_api = require('./area/api');
-app.use('/api/areas' , areas_api);
+app.use('/api/areas', areas_api);
 
-app.use(function(req, res) {
-      log('error' , `url: ${req.url} not found.`);
-      // console.log(req.headers['user-agent']);
-	    return res.status(404).json({message: `url: ${req.url} Not found.`});
+app.use(function (req, res) {
+  log('error', `url: ${req.url} not found.`);
+  // console.log(req.headers['user-agent']);
+  return res.status(404).json({message: `url: ${req.url} Not found.`});
 });
 
 const connectionString = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS}@cluster0.rbxbu.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 mongoose
-  .connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false  })
+  .connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false})
   .then(() => {
-    app.listen(port , function(){
-        log('info',`app started at port ${port}`);
+    app.listen(port, function () {
+      log('info', `app started at port ${port}`);
     });
   })
   .catch(err => {
-    log('error' , err)
+    log('error', err)
   });
 
 

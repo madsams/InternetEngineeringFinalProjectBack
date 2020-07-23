@@ -13,15 +13,16 @@ let headers = {
     'cache-control': 'no-cache'
 }
 
-let getRoles = async ()=>{
+let getUserRoles = async (user_sub)=>{
     let promise = new Promise((resolve , reject)=>{
-        axios.get("https://ieng-final-project.eu.auth0.com/api/v2/roles", headers).then(res=>{
+        axios.get(`https://ieng-final-project.eu.auth0.com/api/v2/users/${user_sub}/roles`, headers).then(res=>{
+            console.log(res);
             resolve(res);
         }).catch(err=>{
-            resolve(defaultRoles);
+            reject(err);
         });
     });
     return await promise;
 }
 
-module.exports = getRoles;
+module.exports = getUserRoles;

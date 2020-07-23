@@ -1,8 +1,9 @@
 const express = require('express');
 const axios = require('axios');
-const getRoles = require('./roles');
+const getUserRoles = require('./roles');
 const log = require('../logger/logger');
 var defaultRoles = require("./defaultRoles");
+
 
 router = express.Router();
 AUTH0_MGMT_API_ACCESS_TOKEN = process.env.AUTH0_MGMT_API_ACCESS_TOKEN;
@@ -16,18 +17,23 @@ let apiManagementHeaders = {
 }
 
 router.get('/roles', (req, res) => {
-	log('************');
-  	const {permissions} = req.user;
-  	log(req.user._json);
-  	log('************');
-	let url = `https://ieng-final-project.eu.auth0.com/api/v2/users/${req.user.id}/roles`;
-	axios.get(url,apiManagementHeaders).then((result) =>{
+	getUserRoles(req.user.sub).then((result) =>{
 		console.log(result);
 		return res.status(200).json(result.data);
 	}).catch((err)=> {
-		res.status(400).json(err);
+		console.log(err);
+		res.status(500).json(err);
 	});
 });
+
+router.get('/test', (req, res) => {
+	updateAccessToken().then(result => {
+		res.status(200).json(result);
+	}).catch(err => {
+		console.log(err);
+		res.status(500).json(err);
+	})
+})
 
 
 module.exports = router;

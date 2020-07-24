@@ -4,10 +4,8 @@ const redis = require('redis');
 const log = require('./../logger/logger');
 const getUserRoles = require('./../user/roles');
 
-redis_port = process.env.REDIS_PORT;
-redis_host = process.env.REDIS_HOST;
-
-const redis_client = redis.createClient(redis_port);
+const redis_client = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
+redis_client.auth(process.env.REDIS_PASSWORD);
 
 checkCache = (req, res, next) => {
 	const {id} = req.params;

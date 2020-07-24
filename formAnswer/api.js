@@ -16,7 +16,7 @@ router.use(function(req, res, next) {
     next();
 });
 
-router.get('/' , permit(roles.ADMIN) , (req , res)=>{
+router.get('/' , permit(roles.ADMIN , roles.CONTROL_CENTER_AGENT) , (req , res)=>{
     service.findAllAnswers().then(result=>{
         return res.status(result.status).json(result.body);
     })
@@ -45,10 +45,11 @@ router.get('/:id' , checkCache , (req , res) => {
     const id = req.params.id;
     service.findAnswer(id)
     .then(answer=>{
-    //    redis_client.setex(id, 3600, JSON.stringify(result.body));
+        redis_client.setex(id, 3600, JSON.stringify(answer.body));
         return res.status(answer.status).json(answer.body);
     })
     .catch(err=>{
+        console.log(err);
         return res.status(err.status).json(err.body);
     })
 });

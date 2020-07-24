@@ -7,9 +7,8 @@ const getUserRoles = require('./../user/roles');
 const redis_client = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
 redis_client.auth(process.env.REDIS_PASSWORD);
 
-checkCache = (req, res, next) => {
+let checkCache = (req, res, next) => {
 	const {id} = req.params;
-
 	redis_client.get(id, (err, data) => {
         if (err) {
             log('error', err);

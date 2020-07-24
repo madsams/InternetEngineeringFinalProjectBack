@@ -3,6 +3,7 @@ const log = require('./../logger/logger');
 const service = require('./service');
 const {check, validationResult} = require('express-validator');
 const {redis_client, checkCache} = require('./../cache/redis');
+const {getUserRoles, getUserRolesFromCache} = require('./../user/roles');
 
 const router = express.Router();
 const errorFormatter = ({ location, msg, param}) => {
@@ -19,7 +20,11 @@ router.use(function(req, res, next) {
 });
 
 router.get('/' , (req , res)=> {
-    // console.log(req.user);
+    getUserRolesFromCache(req.user.sub).then(result=>{
+        console.log(result);
+    }).catch(err=>{
+        console.log(err);
+    });
     let resultPromise = service.getForms();
     resultPromise.then(result =>{
         return res.status(result.status).json(result.body);

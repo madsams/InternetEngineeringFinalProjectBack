@@ -3,7 +3,6 @@ let request = require("request");
 let axios = require("axios");
 let roles = [];
 const log = require('../logger/logger');
-const defaultRoles = require('./defaultRoles');
 const {redis_client, checkCache} = require('./../cache/redis');
 
 
@@ -53,4 +52,4 @@ getUserRolesFromCache = async (user_sub) => {
 };
 
 
-module.exports = {getUserRoles, getUserRolesFromCache};
+module.exports = getUserRolesFromCache;

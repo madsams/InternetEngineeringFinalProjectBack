@@ -1,12 +1,9 @@
 const express = require('express');
 const log = require('./../logger/logger');
 const service = require('./service');
-const {check, validationResult} = require('express-validator');
+const {redis_client, checkCache} = require('./../cache/redis');
 
 const router = express.Router();
-const errorFormatter = ({ location, msg, param}) => {
-    return ` ${param} -> ${msg} `;
-  };
 
 router.use(function(req, res, next) {
     log('info' , `new ${req.method} request on ${req.originalUrl}`);
@@ -42,10 +39,11 @@ router.post('/:id' , (req , res)=> {
     });
 });
 
-router.get('/:id' , (req , res) => {
+router.get('/:id' ,checkCache , (req , res) => {
     const id = req.params.id;
     service.findAnswer(id)
     .then(answer=>{
+        redis_client.setex(id, 3600, JSON.stringify(result.body));
         return res.status(answer.status).json(answer.body);
     })
     .catch(err=>{
@@ -54,16 +52,17 @@ router.get('/:id' , (req , res) => {
 });
 
 
-// router.delete('/:id' , (req , res) => {
-//     const id = req.params.id;
-//     service.deleteFormAnswer(id)
-//     .then(answer=>{
-//         return res.status(answer.status).json(answer.body);
-//     })
-//     .catch(err=>{
-//         return res.status(err.status).json(err.body);
-//     })
-// });
+
+router.delete('/:id' , (req , res) => {
+    const id = req.params.id;
+    service.deleteFormAnswer(id)
+    .then(answer=>{
+        return res.status(answer.status).json(answer.body);
+    })
+    .catch(err=>{
+        return res.status(err.status).json(err.body);
+    })
+});
 
 
 module.exports = router;

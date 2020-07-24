@@ -2,13 +2,10 @@ const express = require('express');
 const axios = require('axios');
 const getUserRoles = require('./roles');
 const jwtAuthz = require("express-jwt-authz");
-var defaultRoles = require("./defaultRoles");
 const service = require('./../formAnswer/service');
 
 const router = express.Router();
 AUTH0_MGMT_API_ACCESS_TOKEN = process.env.AUTH0_MGMT_API_ACCESS_TOKEN;
-
-const roles = defaultRoles;
 
 let apiManagementHeaders = {
   headers: {

@@ -276,4 +276,6 @@ $RECYCLE.BIN/
 # .yarn/cache
 # .pnp.*
 
+.vscode
+
 # End of https://www.toptal.com/developers/gitignore/api/yarn,node,windows,linux,visualstudiocode,webstorm

@@ -31,7 +31,7 @@ let filteredBy = (form , filter)=>{
                     if (ok === true)
                         continue;
                 }
-                else if (field.type === 'Data'){
+                else if (field.type === 'Date'){
                     let date = new Date(answer.values[field.name]);
                     let from = new Date(filter[field.name].from);
                     let to = new Date(filter[field.name].to);

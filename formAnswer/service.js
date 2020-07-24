@@ -32,11 +32,15 @@ let findAllAnswers = async (userId)=>{
     return await promise;
 }
 
-let findAnswer = async (id) =>{
+let findAnswer = async (id , userId) =>{
     let promise = new Promise((resolve , reject)=>{
         data.findAnswer(id)
         .then(async (answer)=>{
             if(answer){
+                if (userId && userId !== answer.toJSON().userId){
+                    reject({status:401 , body:{message : 'no permission'}})
+                    return;
+                }
                 let form = {...answer.formId.toJSON()};
                 form.formId = form.id;
                 delete form.id;

@@ -45,7 +45,7 @@ router.get('/:id' , checkCache , (req , res) => {
     const id = req.params.id;
     service.findAnswer(id)
     .then(answer=>{
-        redis_client.setex(id, 3600, JSON.stringify(result.body));
+    //    redis_client.setex(id, 3600, JSON.stringify(result.body));
         return res.status(answer.status).json(answer.body);
     })
     .catch(err=>{

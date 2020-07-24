@@ -11,17 +11,18 @@ checkCache = (req, res, next) => {
 	const {id} = req.params;
 
 	redis_client.get(id, (err, data) => {
-    if (err) {
-        log(err);
-        res.status(500).json(err);
-    }
-    //if no match found
-    if (data) {
-    	log('Read from cache');
-        res.status(200).json(JSON.parse(data));
-    } else {
-      	next();
-    }
+        if (err) {
+            log('error', err);
+            res.status(500).json(err);
+            return;
+        }
+        //if no match found
+        if (data) {
+            log('info' , 'Read from cache');
+            res.status(200).json(JSON.parse(data));
+        } else {
+            next();
+        }
   });
 };
 

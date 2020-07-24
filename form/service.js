@@ -83,12 +83,15 @@ let getFormAnswers = async (id , filter)=>{
                     if(field.type === 'Location'){
                         result.records = await Promise.all(result.records.map(async answer=>{
                             let value = answer.values[field.name];
-                            if (!value)
+                            if (!value){
+                                answer.values[field.name] = {value:null , cover:[]};
                                 return answer;
+                            }
                             let point = [parseFloat(answer.values[field.name].lng) , parseFloat(answer.values[field.name].lat)];
                             let res = await getCoveredAreas(point);
+                            answer.values[field.name] = {value:value , cover:[]};
                             if (res.status == 200 && res.body.length > 0)
-                                answer.values[field.name] = res.body;
+                                answer.values[field.name].cover = res.body;
                             return answer;
                         }));
                     }

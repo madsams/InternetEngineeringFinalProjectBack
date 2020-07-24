@@ -39,10 +39,10 @@ let filteredBy = (form , filter)=>{
                         continue;
                 }
                 else{
-                    if (!answer.values[field.name].lng){
+                    if (answer.values[field.name].cover){
                         let ok = false;
                         for(const area of filter[field.name]){
-                            for (const loc of answer.values[field.name]){
+                            for (const loc of answer.values[field.name].cover){
                                 if (loc.id === area){
                                     ok = true;
                                     break;

@@ -39,7 +39,7 @@ getUserRolesFromCache = async (user_sub) => {
           } else {
               getUserRoles(user_sub).then((result) =>{
                   redis_client.setex(user_sub, 3600, JSON.stringify(result.data));
-                  resolve(result.body);
+                  resolve(result.data);
               }).catch((err)=> {
                   console.log(err);
                   reject(err);

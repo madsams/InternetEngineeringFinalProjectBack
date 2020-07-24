@@ -26,7 +26,7 @@ router.get('/' , (req , res)=> {
     });
 });
 
-router.post('/' , (req , res)=> {
+router.post('/' , permit(roles.ADMIN) ,(req , res)=> {
     const form = req.body;
     form.createdAt = new Date();
     let resultPromise = service.createForm(form);
@@ -39,7 +39,7 @@ router.post('/' , (req , res)=> {
 });
 
 
-router.get('/:id/form-answers', (req , res)=>{
+router.get('/:id/form-answers', permit(roles.ADMIN , roles.CONTROL_CENTER_AGENT) , (req , res)=>{
     const id = req.params.id;
     let filter;
     try{
@@ -58,7 +58,7 @@ router.get('/:id/form-answers', (req , res)=>{
     });
 })
 
-router.get('/:id', checkCache, (req , res) => {
+router.get('/:id',permit(roles.ADMIN , roles.FIELD_AGENT) , checkCache, (req , res) => {
     const id = req.params.id;
     let resultPromise = service.getForm(id);
     resultPromise.then(result =>{
@@ -70,7 +70,7 @@ router.get('/:id', checkCache, (req , res) => {
     });
 });
 
-router.delete('/:id' ,(req , res)=>{
+router.delete('/:id' , permit(roles.ADMIN) ,(req , res)=>{
     const id = req.params.id;
     let resultPromise = service.deleteForm(id);
     resultPromise.then(result =>{

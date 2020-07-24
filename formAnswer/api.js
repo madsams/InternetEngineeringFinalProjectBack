@@ -2,6 +2,8 @@ const express = require('express');
 const log = require('./../logger/logger');
 const service = require('./service');
 const {redis_client, checkCache} = require('./../cache/redis');
+const permit = require('../security/checkPermission');
+const roles = require('./../security/roles');
 
 const router = express.Router();
 
@@ -14,7 +16,7 @@ router.use(function(req, res, next) {
     next();
 });
 
-router.get('/' , (req , res)=>{
+router.get('/' , permit(roles.ADMIN) , (req , res)=>{
     service.findAllAnswers().then(result=>{
         return res.status(result.status).json(result.body);
     })
@@ -23,7 +25,7 @@ router.get('/' , (req , res)=>{
     });
 });
 
-router.post('/:id' , (req , res)=> {
+router.post('/:id', permit(roles.FIELD_AGENT) , (req , res)=> {
     let answer = req.body;
     const id = req.params.id;
     answer['values'] = {...answer};
@@ -39,7 +41,7 @@ router.post('/:id' , (req , res)=> {
     });
 });
 
-router.get('/:id' ,checkCache , (req , res) => {
+router.get('/:id' , checkCache , (req , res) => {
     const id = req.params.id;
     service.findAnswer(id)
     .then(answer=>{
@@ -53,7 +55,7 @@ router.get('/:id' ,checkCache , (req , res) => {
 
 
 
-router.delete('/:id' , (req , res) => {
+router.delete('/:id' ,permit(roles.ADMIN) , (req , res) => {
     const id = req.params.id;
     service.deleteFormAnswer(id)
     .then(answer=>{

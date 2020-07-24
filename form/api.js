@@ -1,7 +1,7 @@
 const express = require('express');
 const log = require('./../logger/logger');
 const service = require('./service');
-const {redis_client, checkCache} = require('./../cache/redis');
+const {setInCache , checkCache} = require('./../cache/redis');
 const permit = require('../security/checkPermission');
 const roles = require('./../security/roles');
 const router = express.Router();
@@ -43,7 +43,7 @@ router.get('/:id/form-answers', permit(roles.ADMIN , roles.CONTROL_CENTER_AGENT)
     const id = req.params.id;
     let filter;
     try{
-        if (req.query.filter)
+        if (req.query.filter)   
             filter = JSON.parse(req.query.filter);
     }
     catch(err){
@@ -58,11 +58,11 @@ router.get('/:id/form-answers', permit(roles.ADMIN , roles.CONTROL_CENTER_AGENT)
     });
 })
 
-router.get('/:id',permit(roles.ADMIN , roles.FIELD_AGENT) , checkCache, (req , res) => {
+router.get('/:id',permit(roles.ADMIN , roles.FIELD_AGENT) , checkCache(undefined), (req , res) => {
     const id = req.params.id;
     let resultPromise = service.getForm(id);
     resultPromise.then(result =>{
-        redis_client.setex(id, 3600, JSON.stringify(result.body));
+        setInCache(id , result.body);
         return res.status(result.status).json(result.body);
     })
     .catch(err=>{

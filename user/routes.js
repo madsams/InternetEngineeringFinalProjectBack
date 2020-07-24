@@ -1,19 +1,12 @@
 const express = require('express');
-const axios = require('axios');
 const getUserRoles = require('./roles');
-const jwtAuthz = require("express-jwt-authz");
 const service = require('./../formAnswer/service');
 const permit = require('../security/checkPermission');
 const roles = require('./../security/roles');
-const { FIELD_AGENT } = require('./../security/roles');
+const { checkCache , setInCache } = require('../cache/redis');
 const router = express.Router();
-AUTH0_MGMT_API_ACCESS_TOKEN = process.env.AUTH0_MGMT_API_ACCESS_TOKEN;
 
-let apiManagementHeaders = {
-  headers: {
-    Authorization: `Bearer ${AUTH0_MGMT_API_ACCESS_TOKEN}`
-  }
-};
+
 
 router.get('/roles', (req, res) => {
 	getUserRoles(req.user.sub).then((result) =>{
@@ -25,8 +18,9 @@ router.get('/roles', (req, res) => {
 	});
 });
 
-router.get('/form-answers', permit(roles.FIELD_AGENT) ,(req , res)=>{
+router.get('/form-answers', permit(roles.FIELD_AGENT) , checkCache('form_answers') ,(req , res)=>{
 	service.findAllAnswers(req.user.sub).then(result=>{
+		setInCache(`form_answers_${req.user.sub}` , result.body);
 		return res.status(result.status).json(result.body);
 	}).catch(err=>{
 		return res.status(err.status).json(err.body);

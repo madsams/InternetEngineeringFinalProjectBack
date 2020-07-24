@@ -1,10 +1,10 @@
 const express = require('express');
 const log = require('./../logger/logger');
 const service = require('./service');
-const {redis_client, checkCache} = require('./../cache/redis');
+const {setInCache , checkCache, getFromCache} = require('./../cache/redis');
 const permit = require('../security/checkPermission');
 const roles = require('./../security/roles');
-
+const userPermission = require('../security/userPermission.js');
 const router = express.Router();
 
 router.use(function(req, res, next) {
@@ -41,17 +41,17 @@ router.post('/:id', permit(roles.FIELD_AGENT) , (req , res)=> {
     });
 });
 
-router.get('/:id' , checkCache , (req , res) => {
+router.get('/:id' , userPermission , permit(roles.ADMIN , roles.CONTROL_CENTER_AGENT) , checkCache(undefined) , (req , res) => {
     const id = req.params.id;
     service.findAnswer(id)
     .then(answer=>{
-        redis_client.setex(id, 3600, JSON.stringify(answer.body));
+        setInCache(id , answer.body);
         return res.status(answer.status).json(answer.body);
     })
     .catch(err=>{
         console.log(err);
         return res.status(err.status).json(err.body);
-    })
+    });
 });
 
 

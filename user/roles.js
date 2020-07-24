@@ -1,9 +1,6 @@
-
-let request = require("request");
 let axios = require("axios");
-let roles = [];
 const log = require('../logger/logger');
-const {redis_client, checkCache} = require('./../cache/redis');
+const {getFromCache, setInCache} = require('./../cache/redis');
 
 
 let apiManagementHeaders = {
@@ -23,29 +20,26 @@ let getUserRoles = async (user_sub)=>{
     return await promise;
 }
 
-getUserRolesFromCache = async (user_sub) => {
+let getUserRolesFromCache = async (user_sub) => {
     let promise = new Promise((resolve , reject) => {
-          redis_client.get(user_sub, (err, data) => {
-          if (err) {
-              log('error' , err);
-              reject(err);
-              return;
-          }
-          //if no match found
-          if (data) {
-              log('info', 'Read from cache');
-              resolve(JSON.parse(data));
-              return;
-          } else {
-              getUserRoles(user_sub).then((result) =>{
-                  redis_client.setex(user_sub, 3600, JSON.stringify(result.data));
-                  resolve(result.data);
-              }).catch((err)=> {
-                  console.log(err);
-                  reject(err);
-              });
-          }
+        getFromCache(user_sub).then(data=>{
+            if (data) {
+                log('info', 'Read from cache');
+                resolve(JSON.parse(data));
+                return;
+            } else {
+                getUserRoles(user_sub).then((result) =>{
+                    setInCache(user_sub , result.data);
+                    resolve(result.data);
+                }).catch((err)=> {
+                    reject(err);
+                });
+            }
+        }).catch(err=>{
+            log('error' , err);
+            reject(err);
         });
+          
     });
 
     return await promise;

@@ -1,14 +1,15 @@
-
-const express = require('express');
 const redis = require('redis');
 const log = require('./../logger/logger');
-const getUserRoles = require('./../user/roles');
 
 const redis_client = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST);
 redis_client.auth(process.env.REDIS_PASSWORD);
-
-let checkCache = (req, res, next) => {
-	const {id} = req.params;
+console.log('clear cache');
+redis_client.flushall();
+let checkCache = idd => (req, res, next) => {
+    let id = req.params.id || req.user.sub;
+    if (idd)
+        id = `${idd}_${id}`;
+    console.log(`call for ${id}`);
 	redis_client.get(id, (err, data) => {
         if (err) {
             log('error', err);
@@ -25,5 +26,21 @@ let checkCache = (req, res, next) => {
   });
 };
 
+let setInCache = (id , data)=>{
+    redis_client.setex(id , 3600 , JSON.stringify(data));
+}
 
-module.exports = {redis_client, checkCache};
+let getFromCache = async id => {
+    let promise = new Promise((resolve , reject)=>{
+        redis_client.get(id, (err, data) => {
+            if (err) {
+                reject(err);
+                return;
+            }
+            resolve(data);
+      });
+    });
+    return await promise;
+}
+
+module.exports = {setInCache, checkCache , getFromCache};

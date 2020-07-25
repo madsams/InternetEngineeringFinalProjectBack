@@ -2,6 +2,7 @@ const data = require('./data');
 const log = require('./../logger/logger');
 const geometry = require('./../geometry/polygon');
 const Point = require('../geometry/point');
+const {getFromCache , setInCache} = require('./../cache/redis');
 
 let getAreas = async () =>{
     let promise = new Promise((resolve , reject)=>{
@@ -49,34 +50,44 @@ let addArea = async (polygon)=>{
 
 let getCoveredAreas = async (point) =>{
     let promise = new Promise((resolve , reject)=>{
-        data.getAreas().then(areas=>{
-            if (areas){
-                let result = []
-                areas.forEach(area => {
-                    let res = area.toJSON();
-                    let BreakException = {};
-                    try{
-                        area.geometry.coordinates.forEach((coordinates)=>{
-                            if(Point.isInsidePolygon(point, coordinates) === true){
-                                result.push({name:res.name , id:res.id});
-                                throw BreakException;
-                            }
-                        });
-                    }
-                    catch(e){
-                        
-                    }
-                });
-                log('info' , JSON.stringify(result));
-                resolve({body: result, status: 200 });
+        getFromCache(point.toString()).then(dataArea=>{
+            if (dataArea){
+                resolve({status:200 , body:JSON.parse(dataArea)});
             }
             else{
-                log('error' , 'query failed');
-                reject({body:{message:'query failed'} , status:500});
+                data.getAreas().then(areas=>{
+                    if (areas){
+                        let result = []
+                        areas.forEach(area => {
+                            let res = area.toJSON();
+                            let BreakException = {};
+                            try{
+                                area.geometry.coordinates.forEach((coordinates)=>{
+                                    if(Point.isInsidePolygon(point, coordinates) === true){
+                                        result.push({name:res.name , id:res.id});
+                                        throw BreakException;
+                                    }
+                                });
+                            }
+                            catch(e){
+                                
+                            }
+                        });
+                        log('info' , JSON.stringify(result));
+                        setInCache(point.toString() , result);
+                        resolve({body: result, status: 200 });
+                    }
+                    else{
+                        log('error' , 'query failed');
+                        reject({body:{message:'query failed'} , status:500});
+                    }
+                }).catch(err =>{
+                    log('error' , err);
+                    reject({body: {message:err} , status:400});
+                });
             }
-        }).catch(err =>{
-            log('error' , err);
-            reject({body: {message:err} , status:400});
+        }).catch(err=>{
+            reject({status:500 , body:{message:err}});
         });
     });
     return await promise;

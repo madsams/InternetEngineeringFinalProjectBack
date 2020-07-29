@@ -18,7 +18,7 @@ let formAnswers = async (id)=>{
 }
 
 let deleteForm = async (id)=>{
-    return await Form.deleteOne({_id:id});
+    return await Form.findByIdAndRemove(id);
 }
 
 let update = async (formId , answerId)=>{

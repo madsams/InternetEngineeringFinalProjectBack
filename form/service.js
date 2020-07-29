@@ -2,7 +2,7 @@ const data = require('./data');
 const log = require('./../logger/logger');
 const sortJsonArray = require('sort-json-array');
 const { getCoveredAreas } = require('../area/service');
-const FormAnswer = require('./../formAnswer/model');
+const formAnswerData = require('./../formAnswer/data');
 const filteredBy = require('./filter');
 
 let getForms = async () =>{
@@ -128,23 +128,8 @@ let getFormAnswers = async (id , filter)=>{
 let deleteForm = async (id) =>{
     let promise = new Promise((resolve , reject)=>{
         data.deleteForm(id).then(result=>{
-            if(result.deletedCount > 0){
-                FormAnswer.deleteMany(
-                    {
-                      fromId: {
-                        $in: [
-                          `${id}`
-                        ]
-                      }
-                    },
-                    function(err, result) {
-                      if (err) {
-                        console.log(err)
-                      } else {
-                        console.log(result);
-                      }
-                    }
-                  );
+            if(result){
+                formAnswerData.deleteMany(result.records);
                 resolve({body:'delete...' , status:200});
             }
             else{

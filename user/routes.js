@@ -8,6 +8,18 @@ const router = express.Router();
 
 
 
+router.get('/' , (req,res)=>{
+	let result = req.user;
+	delete result.locale;
+	delete result.updated_at;
+	delete result.iss;
+	delete result.aud;
+	delete result.iat;
+	delete result.exp;
+	delete result.nonce;
+	return res.status(200).json(result);
+})
+
 router.get('/roles', (req, res) => {
 	getUserRoles(req.user.sub).then((result) =>{
 		console.log(result);

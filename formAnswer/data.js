@@ -20,4 +20,21 @@ let deleteFormAnswer = async (id) => {
     return await FormAnswer.findByIdAndRemove(id);
 }
 
-module.exports = {findAllAnswers , findAnswer , createFormAnswer , deleteFormAnswer};
+let deleteMany = async (listOfId) => {
+    FormAnswer.deleteMany(
+        {
+          _id: {
+            $in: listOfId
+          }
+        },
+        function(err, result) {
+          if (err) {
+            console.log(err)
+          } else {
+            console.log(result);
+          }
+        }
+      );
+}
+
+module.exports = {findAllAnswers , findAnswer , createFormAnswer , deleteFormAnswer , deleteMany};

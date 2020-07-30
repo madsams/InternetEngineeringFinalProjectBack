@@ -7,6 +7,7 @@ const data = require('./data');
 const log = require('./../logger/logger');
 const geometry = require('./../geometry/polygon');
 const Point = require('../geometry/point');
+const {getFromCache , setInCache} = require('./../cache/redis');
 
 /**
  * Find all areas and serve them for api response

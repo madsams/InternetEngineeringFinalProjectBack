@@ -6,11 +6,10 @@
 const express = require('express');
 const log = require('./../logger/logger');
 const service = require('./service');
-const {setInCache, checkCache} = require('./../cache/redis');
+const {setInCache, checkCache , remove} = require('./../cache/redis');
 const permit = require('../security/checkPermission');
 const roles = require('./../security/roles');
 const router = express.Router();
-
 router.use(function (req, res, next) {
 	log('info', `new ${req.method} request on ${req.originalUrl}`);
 	if (
@@ -140,6 +139,7 @@ router.delete('/:id', permit(roles.ADMIN), (req, res) => {
 	let resultPromise = service.deleteForm(id);
 	resultPromise
 		.then((result) => {
+			remove();
 			return res.status(result.status).json(result.body);
 		})
 		.catch((err) => {

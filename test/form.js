@@ -14,6 +14,7 @@ const service = require('../form/service');
 
 
 chai.use(chaiHttp);
+let USER_ID_TOKEN = `Bearer ${process.env.TEST_ID_TOKEN}`;
 
 describe("Forms", () => {
 
@@ -27,6 +28,7 @@ describe("Forms", () => {
 		it('it should return all the forms', (done) => {
 			chai.request(server)
 				.get('/api/forms')
+				.set('Authorization', USER_ID_TOKEN)
 				.end((err, res) => {
 					res.should.have.status(200);
 					res.body.should.be.a("array");
@@ -85,6 +87,7 @@ describe("/POST form", () => {
 		
 		chai.request(server)
            .post('/api/forms')
+		   .set('Authorization', USER_ID_TOKEN)
            .send(fakeFormNoFields)
            .end((err, res) => {
                  res.should.have.status(422);
@@ -102,6 +105,7 @@ describe("/POST form", () => {
 		fakeFormWrongFieldsType.fields[0].type = "AnyThing";
 		chai.request(server)
            .post('/api/forms')
+		   .set('Authorization', USER_ID_TOKEN)
            .send(fakeFormWrongFieldsType)
            .end((err, res) => {
                  res.should.have.status(422);
@@ -116,6 +120,7 @@ describe("/POST form", () => {
 		
 		chai.request(server)
            .post('/api/forms')
+		   .set('Authorization', USER_ID_TOKEN)
            .send(fakeForm)
            .end((err, res) => {
                  res.should.have.status(200);
@@ -132,6 +137,7 @@ describe("/POST form", () => {
 		resultPromise.then(result =>{
 	        chai.request(server)
 	        	.get(`/api/forms/${result.body.id}`)
+		   		.set('Authorization', USER_ID_TOKEN)
 	        	.send(fakeForm)
 	        	.end((err, res) => {
 	        		res.should.have.status(200);

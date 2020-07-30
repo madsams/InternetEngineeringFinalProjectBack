@@ -26,6 +26,7 @@ router.use(function (req, res, next) {
 	}
 	next();
 });
+
 /**
  * Route serving all answers.
  * @name get/

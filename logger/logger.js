@@ -17,8 +17,7 @@ const logger = createLogger({
 	format: combine(
 		timestamp(),
 		printf(
-			(info) =>
-				`new ${info.level} {\n  message: ${info.message}\n  timestamp: ${info.timestamp}\n}\n`
+			(info) => `new ${info.level} {\n  message: ${info.message}\n  timestamp: ${info.timestamp}\n}\n`
 		)
 	),
 	transports: [
@@ -29,7 +28,6 @@ const logger = createLogger({
 		}),
 	],
 });
-
 
 
 /** export log */

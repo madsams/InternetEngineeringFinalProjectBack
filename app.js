@@ -4,7 +4,6 @@
  */
 require('dotenv').config();
 const express = require('express');
-const body_parser = require('body-parser');
 const log = require('./logger/logger');
 const cors = require('cors');
 const path = require('path');

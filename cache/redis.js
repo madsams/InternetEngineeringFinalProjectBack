@@ -18,7 +18,7 @@ redis_client.flushall();
  *  serving from cache middleware.
  * @function
  * @inner
- * @param {string} id - undefined or specific string to make data id in cache
+ * @param {string} idd - undefined or specific string to make data id in cache
  * @param {callback} middleware - read from cache or called next
  */
 let checkCache = (idd) => (req, res, next) => {

@@ -3,6 +3,7 @@
  * @module permission
  */
 const getUserRoles = require('./../user/roles');
+
 /**
  *  check roles permission
  * @function permit

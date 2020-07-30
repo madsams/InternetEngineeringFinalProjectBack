@@ -172,7 +172,8 @@ let createFormAnswer = async (formAnswerJson) => {
 										);
 										resolve({
 											body: {
-												formAnswerId: result.toJSON().id,
+												formAnswerId: result.toJSON()
+													.id,
 											},
 											status: 200,
 										});

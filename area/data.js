@@ -15,6 +15,7 @@ const Area = require('./model');
 let getAreas = async () => {
 	return await Area.find();
 };
+
 /**
  * Create an Area in database
  *

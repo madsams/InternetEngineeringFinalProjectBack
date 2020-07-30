@@ -70,4 +70,8 @@ let getFromCache = async (id) => {
 	return await promise;
 };
 
-module.exports = {setInCache, checkCache, getFromCache};
+let remove = (id)=>{
+	redis_client.flushall();
+}
+
+module.exports = {setInCache, checkCache, getFromCache , remove};

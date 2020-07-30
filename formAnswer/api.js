@@ -6,7 +6,7 @@
 const express = require('express');
 const log = require('./../logger/logger');
 const service = require('./service');
-const {setInCache, checkCache} = require('./../cache/redis');
+const {setInCache, checkCache , remove} = require('./../cache/redis');
 const permit = require('../security/checkPermission');
 const roles = require('./../security/roles');
 const userPermission = require('../security/userPermission.js');
@@ -118,6 +118,7 @@ router.delete('/:id', permit(roles.ADMIN), (req, res) => {
 	service
 		.deleteFormAnswer(id)
 		.then((answer) => {
+			remove();
 			return res.status(answer.status).json(answer.body);
 		})
 		.catch((err) => {

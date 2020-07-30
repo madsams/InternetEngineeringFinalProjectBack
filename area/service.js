@@ -48,6 +48,7 @@ let addArea = async (polygon)=>{
     return await promise;
 };
 
+
 let getCoveredAreas = async (point) =>{
     let promise = new Promise((resolve , reject)=>{
         getFromCache(point.toString()).then(dataArea=>{

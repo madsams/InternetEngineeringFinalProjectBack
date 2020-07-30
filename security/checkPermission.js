@@ -1,5 +1,15 @@
+/**
+ * This module check permission
+ * @module permission
+ */
 const getUserRoles = require('./../user/roles');
-
+/**
+ *  check roles permission
+ * @function permit
+ * @inner
+ * @param {Array} allowed allowed roles to access
+ * @param {callback} middleware - check permission ans try to call next
+ */
 module.exports = function permit(...allowed) {
 	return (req, res, next) => {
 		getUserRoles(req.user.sub)

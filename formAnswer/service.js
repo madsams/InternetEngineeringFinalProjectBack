@@ -1,10 +1,22 @@
+/**
+ * This module connect api module to database
+ * @module formAnswer/service
+ */
+
 const data = require('./data');
 const log = require('./../logger/logger');
 const formData = require('./../form/data');
 const {getCoveredAreas} = require('./../area/service');
-const Form = require('./../form/model');
 const notMatchType = require('./typeChecker');
 
+/**
+ * Find all answer or a user answers and serve them for api response
+ *
+ * @async
+ * @function findAllAnswers
+ * @param {string} userId user id or undefined
+ * @return {Promise} The answers list
+ */
 let findAllAnswers = async (userId) => {
 	let promise = new Promise((resolve, reject) => {
 		data.findAllAnswers(userId)
@@ -42,6 +54,14 @@ let findAllAnswers = async (userId) => {
 	return await promise;
 };
 
+/**
+ * Find the answer and serve them for api response
+ *
+ * @async
+ * @function findAnswer
+ * @param {string} id the answer id
+ * @return {Promise} The answer
+ */
 let findAnswer = async (id) => {
 	let promise = new Promise((resolve, reject) => {
 		data.findAnswer(id)
@@ -96,9 +116,18 @@ let findAnswer = async (id) => {
 	return await promise;
 };
 
+/**
+ * Create new Form and serve response of api
+ *
+ * @async
+ * @function createForm
+ * @param {JSON} formAnswerJson form answer json
+ * @return {Promise} The answer Json
+ */
 let createFormAnswer = async (formAnswerJson) => {
 	let promise = new Promise((resolve, reject) => {
-		Form.findById(formAnswerJson.formId)
+		formData
+			.form(formAnswerJson.formId)
 			.then((form) => {
 				if (form) {
 					let ok = true;
@@ -143,8 +172,7 @@ let createFormAnswer = async (formAnswerJson) => {
 										);
 										resolve({
 											body: {
-												formAnswerId: result.toJSON()
-													.id,
+												formAnswerId: result.toJSON().id,
 											},
 											status: 200,
 										});
@@ -183,6 +211,13 @@ let createFormAnswer = async (formAnswerJson) => {
 	return await promise;
 };
 
+/**
+ * Find the answer and delete it and delete from from records
+ *
+ * @async
+ * @function deleteForm
+ * @param {string} id the from id
+ */
 let deleteFormAnswer = async (id) => {
 	let promise = new Promise((resolve, reject) => {
 		data.deleteFormAnswer(id)

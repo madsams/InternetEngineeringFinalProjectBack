@@ -1,3 +1,8 @@
+/**
+ * This module handle all api related to forms
+ * @module form/api
+ */
+
 const express = require('express');
 const log = require('./../logger/logger');
 const service = require('./service');
@@ -21,6 +26,14 @@ router.use(function (req, res, next) {
 	next();
 });
 
+/**
+ * Route serving all forms.
+ * @name get/
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} middleware - send all forms as response
+ */
 router.get('/', (req, res) => {
 	let resultPromise = service.getForms();
 	resultPromise
@@ -32,6 +45,15 @@ router.get('/', (req, res) => {
 		});
 });
 
+/**
+ * Route create a new form
+ * @name post/
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} permit - check roles can access
+ * @param {callback} middleware - create a new form and send it as response
+ */
 router.post('/', permit(roles.ADMIN), (req, res) => {
 	const form = req.body;
 	form.createdAt = new Date();
@@ -45,6 +67,15 @@ router.post('/', permit(roles.ADMIN), (req, res) => {
 		});
 });
 
+/**
+ * Route serving all answers of the form.
+ * @name get/:id/form-answers
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} permit - check roles can access
+ * @param {callback} middleware - send all forms as response
+ */
 router.get(
 	'/:id/form-answers',
 	permit(roles.ADMIN, roles.CONTROL_CENTER_AGENT),
@@ -67,6 +98,16 @@ router.get(
 	}
 );
 
+/**
+ * Route serving a form.
+ * @name get/:id/
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} permit - check roles can access
+ * @param {callback} checkCache - first check the cache
+ * @param {callback} middleware - send the form as response
+ */
 router.get(
 	'/:id',
 	permit(roles.ADMIN, roles.FIELD_AGENT),
@@ -85,6 +126,15 @@ router.get(
 	}
 );
 
+/**
+ * Route deleting a form.
+ * @name delete/:id/
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} permit - check roles can access
+ * @param {callback} middleware - delete a form
+ */
 router.delete('/:id', permit(roles.ADMIN), (req, res) => {
 	const id = req.params.id;
 	let resultPromise = service.deleteForm(id);

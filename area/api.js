@@ -1,3 +1,8 @@
+/**
+ * This module handle all api related to areas
+ * @module area/api
+ */
+
 const express = require('express');
 const log = require('./../logger/logger');
 const service = require('./service');
@@ -6,6 +11,13 @@ const checks = [check('lng').isFloat(), check('lat').isFloat()];
 const permit = require('../security/checkPermission');
 const roles = require('./../security/roles');
 const router = express.Router();
+
+/**
+ * make a format for messages of the errors
+ *
+ * @function errorFormatter
+ * @return {string} the message of the error in a custom format
+ */
 const errorFormatter = ({location, msg, param}) => {
 	return ` ${param} -> ${msg} `;
 };
@@ -20,6 +32,17 @@ router.use(function (req, res, next) {
 	}
 	next();
 });
+
+/**
+ * Route serving covered areas.
+ * @name get/testpoint
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} permit - check roles can access
+ * @param {callback} check - check has valid params in req.params
+ * @param {callback} middleware - send all covered areas of the point as response
+ */
 
 router.get(
 	'/testpoint',
@@ -45,6 +68,15 @@ router.get(
 	}
 );
 
+/**
+ * Route serving all areas.
+ * @name get/
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} permit - check roles can access
+ * @param {callback} middleware - send all areas as response
+ */
 router.get('/', permit(roles.ADMIN, roles.CONTROL_CENTER_AGENT), (req, res) => {
 	service
 		.getAreas()
@@ -56,6 +88,15 @@ router.get('/', permit(roles.ADMIN, roles.CONTROL_CENTER_AGENT), (req, res) => {
 		});
 });
 
+/**
+ * Route create a new area
+ * @name post/
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} permit - check roles can access
+ * @param {callback} middleware - create a new area and send it as response
+ */
 router.post('/', permit(roles.ADMIN), (req, res) => {
 	const area = req.body;
 	service

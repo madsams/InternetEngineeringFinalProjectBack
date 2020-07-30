@@ -1,6 +1,16 @@
+/**
+ * This module check user permission
+ * @module userPermission
+ */
 const {getFromCache, setInCache} = require('./../cache/redis');
 const service = require('./../formAnswer/service');
 
+/**
+ *  check user permission for form answer
+ * @function
+ * @inner
+ * @param {callback} middleware - read answers from cache or called next
+ */
 let userPermission = (req, res, next) => {
 	const id = req.params.id;
 	getFromCache(id)

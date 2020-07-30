@@ -1,6 +1,12 @@
+/**
+ * This module create jwt for check authentication
+ * @module authentication
+ */
+
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 
+/** export jwt */
 module.exports = jwt({
 	secret: jwksRsa.expressJwtSecret({
 		cache: true,

@@ -1,3 +1,15 @@
+/**
+ * This module check value type
+ * @module matchType
+ */
+
+/**
+ *  check validation of value
+ * @function
+ * @param {object} value - value to check
+ * @param {string} type - type of value
+ * @return {Boolean} is valid or not
+ */
 let notMatchType = (value, type) => {
 	if (type === 'Number') {
 		if (isNaN(value)) return false;

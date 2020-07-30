@@ -1,5 +1,17 @@
+/**
+ * This module filter a form answers
+ * @module filter
+ */
+
 const log = require('../logger/logger');
 
+/**
+ *  filter answer by filter parameters.
+ * @function
+ * @param {JSON} form - json of the form
+ * @param {JSON} filter - filter parameters
+ * @return {Array} the filter list of form records
+ */
 let filteredBy = (form, filter) => {
 	if (!filter) return form.records;
 	let result = [];

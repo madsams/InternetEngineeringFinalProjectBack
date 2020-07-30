@@ -1,7 +1,17 @@
+/**
+ * This module describe the area model
+ * @module area/model
+ */
+
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+/**
+ * Mongoose Schema to describe a polygon
+ * @type {object}
+ * @const
+ */
 const polygonSchema = new mongoose.Schema({
 	type: {
 		type: String,
@@ -13,6 +23,12 @@ const polygonSchema = new mongoose.Schema({
 		required: true,
 	},
 });
+
+/**
+ * Mongoose Schema to describe a area
+ * @type {object}
+ * @const
+ */
 
 const areaSchema = new Schema(
 	{

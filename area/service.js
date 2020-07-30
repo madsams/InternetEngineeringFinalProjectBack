@@ -1,8 +1,20 @@
+/**
+ * This module connect api module to database
+ * @module area/service
+ */
+
 const data = require('./data');
 const log = require('./../logger/logger');
 const geometry = require('./../geometry/polygon');
 const Point = require('../geometry/point');
 
+/**
+ * Find all areas and serve them for api response
+ *
+ * @async
+ * @function getAreas
+ * @return {Promise} The Areas list
+ */
 let getAreas = async () => {
 	let promise = new Promise((resolve, reject) => {
 		data.getAreas()
@@ -27,6 +39,14 @@ let getAreas = async () => {
 	return await promise;
 };
 
+/**
+ * Create new Area and serve response of api
+ *
+ * @async
+ * @function addArea
+ * @return {Promise} The Area Json
+ */
+
 let addArea = async (polygon) => {
 	let promise = new Promise((resolve, reject) => {
 		if (geometry.isPolygon(polygon.geometry) === true) {
@@ -48,6 +68,14 @@ let addArea = async (polygon) => {
 	return await promise;
 };
 
+/**
+ * Find all covered areas of the point in params and serve them for api response
+ *
+ * @async
+ * @function getAreas
+ * @param {object} point - the point [lng , lat]
+ * @return {Promise} The Areas list
+ */
 let getCoveredAreas = async (point) => {
 	let promise = new Promise((resolve, reject) => {
 		data.getAreas()

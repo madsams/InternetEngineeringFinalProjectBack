@@ -1,7 +1,17 @@
+/**
+ * This module create logger
+ * @module logger
+ */
+
 const {createLogger, format, transports} = require('winston');
 const {combine, timestamp, printf} = format;
 const level = 'debug';
 
+/**
+ *]create a custom logger
+ * @type {object}
+ * @const
+ */
 const logger = createLogger({
 	level,
 	format: combine(
@@ -20,11 +30,12 @@ const logger = createLogger({
 	],
 });
 
-function log(level, message) {
+
+
+/** export log */
+module.exports = function log(level, message) {
 	logger.log({
 		message,
 		level,
 	});
-}
-
-module.exports = log;
+};

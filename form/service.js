@@ -1,3 +1,8 @@
+/**
+ * This module connect api module to database
+ * @module form/service
+ */
+
 const data = require('./data');
 const log = require('./../logger/logger');
 const sortJsonArray = require('sort-json-array');
@@ -5,6 +10,13 @@ const {getCoveredAreas} = require('../area/service');
 const formAnswerData = require('./../formAnswer/data');
 const filteredBy = require('./filter');
 
+/**
+ * Find all forms and serve them for api response
+ *
+ * @async
+ * @function getForms
+ * @return {Promise} The forms list
+ */
 let getForms = async () => {
 	let promise = new Promise((resolve, reject) => {
 		data.forms()
@@ -31,6 +43,14 @@ let getForms = async () => {
 	return await promise;
 };
 
+/**
+ * Find the form and serve them for api response
+ *
+ * @async
+ * @function getForm
+ * @param {string} id the form id
+ * @return {Promise} The form
+ */
 let getForm = async (id) => {
 	let promise = new Promise((resolve, reject) => {
 		data.form(id)
@@ -56,6 +76,14 @@ let getForm = async (id) => {
 	return await promise;
 };
 
+/**
+ * Create new Form and serve response of api
+ *
+ * @async
+ * @function createForm
+ * @param {JSON} formJson the form json
+ * @return {Promise} The Form Json
+ */
 let createForm = async (formJson) => {
 	let promise = new Promise((resolve, reject) => {
 		data.createForm(formJson)
@@ -74,6 +102,15 @@ let createForm = async (formJson) => {
 	return await promise;
 };
 
+/**
+ * Find all form answers then filter and serve them for api response
+ *
+ * @async
+ * @function getForm
+ * @param {string} id the from id
+ * @param {JSON} filter filter parameters
+ * @return {Promise} The form
+ */
 let getFormAnswers = async (id, filter) => {
 	let promise = new Promise((resolve, reject) => {
 		data.formAnswers(id, filter)
@@ -155,6 +192,13 @@ let getFormAnswers = async (id, filter) => {
 	return await promise;
 };
 
+/**
+ * Find the form and delete it and delete its answers
+ *
+ * @async
+ * @function deleteForm
+ * @param {string} id the from id
+ */
 let deleteForm = async (id) => {
 	let promise = new Promise((resolve, reject) => {
 		data.deleteForm(id)

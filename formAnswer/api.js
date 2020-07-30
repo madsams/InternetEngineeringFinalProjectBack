@@ -1,3 +1,8 @@
+/**
+ * This module handle all api related to form answers
+ * @module formAnswer/api
+ */
+
 const express = require('express');
 const log = require('./../logger/logger');
 const service = require('./service');
@@ -21,7 +26,15 @@ router.use(function (req, res, next) {
 	}
 	next();
 });
-
+/**
+ * Route serving all answers.
+ * @name get/
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} permit - check roles can access
+ * @param {callback} middleware - send all answers as response
+ */
 router.get('/', permit(roles.ADMIN, roles.CONTROL_CENTER_AGENT), (req, res) => {
 	service
 		.findAllAnswers()
@@ -33,6 +46,15 @@ router.get('/', permit(roles.ADMIN, roles.CONTROL_CENTER_AGENT), (req, res) => {
 		});
 });
 
+/**
+ * Route create a new answer
+ * @name post/
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} permit - check roles can access
+ * @param {callback} middleware - create a new answer and send it as response
+ */
 router.post('/:id', permit(roles.FIELD_AGENT), (req, res) => {
 	let answer = req.body;
 	const id = req.params.id;
@@ -50,6 +72,17 @@ router.post('/:id', permit(roles.FIELD_AGENT), (req, res) => {
 		});
 });
 
+/**
+ * Route serving a answer.
+ * @name get/:id/
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} userPermission - check user can access
+ * @param {callback} permit - check roles can access
+ * @param {callback} checkCache - first check the cache
+ * @param {callback} middleware - send the answer as response
+ */
 router.get(
 	'/:id',
 	userPermission,
@@ -70,6 +103,15 @@ router.get(
 	}
 );
 
+/**
+ * Route deleting a answer.
+ * @name delete/:id/
+ * @function
+ * @inner
+ * @param {string} path - api path
+ * @param {callback} permit - check roles can access
+ * @param {callback} middleware - delete a answer
+ */
 router.delete('/:id', permit(roles.ADMIN), (req, res) => {
 	const id = req.params.id;
 	service

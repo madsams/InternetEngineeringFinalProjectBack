@@ -1,11 +1,26 @@
+/**
+ * This module describe the form model
+ * @module form/model
+ */
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
+/**
+ * check the limit of an array
+ *
+ * @function arrayLimit
+ * @return {Boolean} validation of array
+ */
 function arrayLimit(val) {
 	return val && val.length > 0;
 }
 
+/**
+ * Mongoose Schema to describe a form
+ * @type {object}
+ * @const
+ */
 const formSchema = new Schema(
 	{
 		title: {

@@ -1,7 +1,16 @@
+/**
+ * This module describe the form answer model
+ * @module formAnswer/model
+ */
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-// const Form = require('./../form/model');
 
+/**
+ * Mongoose Schema to describe a form answer
+ * @type {object}
+ * @const
+ */
 const formAnswerSchema = new Schema(
 	{
 		formId: {
